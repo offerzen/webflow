@@ -1,0 +1,243 @@
+@-webkit-keyframes blink-dino {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes blink-dino {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-o-keyframes blink-dino {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink-dino {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-ms-keyframes blink-dino {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dino-run {
+  0% {
+    left: 0%;
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    left: 100%;
+    opacity: 0;
+  }
+  81% {
+    opacity: 0;
+    left: 100%;
+  }
+  82% {
+    opacity: 0;
+    left:-20%;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    left: 0%;
+  }
+}
+
+@-webkit-keyframes dino-run {
+  0% {
+    left: 0%;
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    left: 100%;
+    opacity: 0;
+  }
+  81% {
+    opacity: 0;
+    left: 100%;
+  }
+  82% {
+    opacity: 0;
+    left:-20%;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    left: 0%;
+  }
+}
+
+@-moz-keyframes dino-run {
+  0% {
+    left: 0%;
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    left: 100%;
+    opacity: 0;
+  }
+  81% {
+    opacity: 0;
+    left: 100%;
+  }
+  82% {
+    opacity: 0;
+    left:-20%;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    left: 0%;
+  }
+}
+
+@-o-keyframes dino-run {
+  0% {
+    left: 0%;
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    left: 100%;
+    opacity: 0;
+  }
+  81% {
+    opacity: 0;
+    left: 100%;
+  }
+  82% {
+    opacity: 0;
+    left:-20%;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    left: 0%;
+  }
+}
+
+@-ms-keyframes dino-run {
+  0% {
+    left: 0%;
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    left: 100%;
+    opacity: 0;
+  }
+  81% {
+    opacity: 0;
+    left: 100%;
+  }
+  82% {
+    opacity: 0;
+    left:-20%;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    left: 0%;
+  }
+}
+
+.footer__dinosaur {
+  text-align: center;
+  width: 51px;
+  line-height: 0;
+  position: relative;
+  cursor: pointer;
+}
+
+.dino-run {
+  -webkit-animation: dino-run 5s linear;
+  -moz-animation: dino-run 5s linear;
+  -o-animation: dino-run 5s linear;
+  animation: dino-run 5s linear;
+}
+
+.dino-step-1-animation {
+  -webkit-animation: blink-dino 0.4s linear infinite;
+  -moz-animation: blink-dino 0.4s linear infinite;
+  -o-animation: blink-dino 0.4s linear infinite;
+  animation: blink-dino 0.4s linear infinite;
+}
+
+.dino-step-2-animation {
+  -webkit-animation: blink-dino 0.4s linear 0.2s infinite;
+  -moz-animation: blink-dino 0.4s linear 0.2s infinite;
+  -o-animation: blink-dino 0.4s linear 0.2s infinite;
+  animation: blink-dino 0.4s linear 0.2s infinite;
+}
