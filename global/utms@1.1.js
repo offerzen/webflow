@@ -1,5 +1,7 @@
 // UTM tracking
 (function() {
+  console.log('utms');
+
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
@@ -48,6 +50,7 @@
   }
 
   window.addEventListener("load", function () {
+    console.log('utms run');
     url = window.location.href;
     formattedUtmParams = formatUtmParameters(url);
     if (formattedUtmParams !== null) {

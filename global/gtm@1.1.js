@@ -1,5 +1,8 @@
 !function(){
+  console.log('gtm')
+
   function loadGtm (w, d, s, l, i) {
+      console.log('gtm run')
       w[l] = w[l] || []; w[l].push({
         'gtm.start':
           new Date().getTime(), event: 'gtm.js'
