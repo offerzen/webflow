@@ -5,10 +5,10 @@
   window.$loaded = function (cb) {
     setTimeout(() => {
       if (window.jQuery) {
-        console.log('loader run')
         cb(window, document, $, undefined)
         return
       }
+      console.log('loader run', cb.name)
       $loaded(cb)
     }, 50)
   };
