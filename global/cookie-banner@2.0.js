@@ -1,9 +1,7 @@
 !function(){
-  console.log('cookie')
 
   const loadCookieBanner = () => $loaded(
     function (window, document, $, undefined) {
-      console.log('cookie run');
       var ready = function () {
         if (getCookie('_zadev_cb_acc')) { return }
         const $cookieBanner = $('.js-cookie-banner')
