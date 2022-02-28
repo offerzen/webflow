@@ -16,7 +16,7 @@
 
     var ready = function () {
       (function trackAnalytics() {
-        $('[data-js="track-nav"]').each(function () {
+        function trackElement () {
           var link = $(this);
           var name = link.attr('data-name');
           var category = link.attr('data-category');
@@ -41,7 +41,11 @@
               }
             );
           });
-        });
+        }
+
+        // Some pages use -cta, some use -nav
+        $('[data-js="track-nav"]').each(trackElement);
+        $('[data-js="track-cta"]').each(trackElement);
       })();
     };
 
