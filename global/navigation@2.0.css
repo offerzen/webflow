@@ -17,10 +17,6 @@
       width: calc(100% - 48px) !important;
   }
 
-  /*.logout-nav-item {
-      width: calc(100% - 48px) !important;
-  }*/
-
   .open-nav-menu {
       transform: translate3d(0, 0, 1px) !important;
       transition: transform ease-in 0.3s;

@@ -1,8 +1,5 @@
 !function(){
-  console.log('dino')
-
   const dino = window.$loaded(function(window, document, $, undefined) {
-    console.log('dino run')
     $('.footer__dinosaur').on('click', function(event) {
       $('.footer__dinosaur').removeClass('dino-run');
 
