@@ -310,7 +310,6 @@ $loaded(function (window, document, $, undefined) {
     // submit form
     $.post('/api/growth/forms/event_premiers', paramObj, function (res) {
       if (res.user_id) {
-        // analytics.identify(res.user_id)
         dataLayer.push({
           event: 'Event Registration',
           label: 'untold stories',
