@@ -1,5 +1,4 @@
 $loaded(function (window, document, $, undefined) {
-
   function submitFormContent(formObject, formProperties, token, callback) {
     let subscribe_to_company_newsletter = $('#subscribe_to_newsletter').val()
     let formPayload = Object.assign({}, formProperties, {
