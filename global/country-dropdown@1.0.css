@@ -1,0 +1,19 @@
+.w-select {
+  /* resetting default form style*/
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.country-select-wrapper {
+  position: relative;
+}
+
+.country-select-wrapper::before {
+  display: block;
+  content: url(https://d3qdc2zh3mwabb.cloudfront.net/assets/arrow-down-029450f448b62da4f6e326ac803648fe3593d56606396a93464a3c3fdbb9ce58.png);
+  position: absolute;
+  right: 15px;
+  top: 12px;
+  pointer-events: none;
+}
