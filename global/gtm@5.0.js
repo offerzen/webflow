@@ -8,5 +8,5 @@
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
     };
 
-  setTimeout(function(){ loadGtm(window, document, 'script', 'dataLayer', 'GTM-WTG6R2B') }, 2500);
+  loadGtm(window, document, 'script', 'dataLayer', 'GTM-WTG6R2B')
 }();

@@ -10,5 +10,5 @@
     analytics.load('WGk0NXmhoqH5OVjoaJUU6Tmj9Ge6fFY6');
     analytics.page('landing');
   }}
-  setTimeout(loadSegment, 2000);
+  loadSegment()
 }()
