@@ -1,0 +1,235 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.iti {
+  min-width: 100%;
+  margin-bottom: 20px;
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+}
+
+.iti__country {
+  padding: 8px 10px;
+}
+
+.iti .iti__flag-container {
+  position: static;
+}
+
+.iti .iti__selected-flag {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: auto;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.iti .iti__country.iti__highlight {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.iti .iti__country-list {
+  top: 0%;
+  width: 100%;
+}
+
+.iti-mobile .iti--container {
+  top: -21px !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  height: 200px;
+  position: absolute;
+}
+
+.iti--container {
+  top: -21px !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  height: 200px;
+  position: absolute;
+}
+
+.parsley-errors-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: -15px;
+  color: #e25c59;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.2;
+  font-family: 'Proxima Nova';
+}
+
+.w-input.parsley-error {
+  border: 1px solid #e25c59 !important;
+  border-radius: 3px;
+}
+
+.w-input.parsley-error:focus {
+  box-shadow: 0 0 0 2px rgb(226 92 89 / 25%);
+}
+
+.w-select.parsley-error {
+  border: 1px solid #e25c59 !important;
+  border-radius: 3px;
+}
+
+.w-select.parsley-error:focus {
+  box-shadow: 0 0 0 2px rgb(226 92 89 / 25%);
+}
+
+.js-header {
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+}
+
+.error {
+  border-color: red;
+}
+
+.w-select {
+  /* resetting default form style*/
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.num-hire-select-wrapper::before {
+  display: block;
+  content: url(https://d3qdc2zh3mwabb.cloudfront.net/assets/arrow-down-029450f448b62da4f6e326ac803648fe3593d56606396a93464a3c3fdbb9ce58.png);
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 479px) {
+  .iti .iti__selected-flag {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+
+  .iti {
+    font-size: 16px;
+  }
+
+  .num-hire-select-wrapper::before {
+    top: 12px;
+  }
+}
+
+/* Skill fields */
+.notice-text {
+  display: inline-flex;
+  font-weight: 600;
+  font-size: 12px;
+  font-family: 'proxima-nova', Helvetica, Arial, sans-serif;
+  line-height: 1.2;
+  color: #7c7c80;
+  margin-top: 3px;
+}
+
+.js-skills-item-result {
+  font-family: 'proxima-nova', Helvetica, Arial, sans-serif;
+  position: relative;
+  user-select: none;
+  padding: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #e4f0fc;
+  color: #5ea5ee;
+}
+
+.js-skills-item-result:hover {
+  background-color: #e4f0fc;
+  color: #5ea5ee;
+}
+
+.js-skills-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  top: -18px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #e4ebef;
+  border-radius: 3px;
+  z-index: 600;
+  margin-top: -2px;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  background-image: linear-gradient(#fff, rgba(255, 255, 255, 0)),
+    linear-gradient(to top, #fff, rgba(255, 255, 255, 0)),
+    linear-gradient(rgba(166, 172, 175, 0.15), rgba(166, 172, 175, 0)),
+    linear-gradient(to top, rgba(166, 172, 175, 0.15), rgba(166, 172, 175, 0));
+  background-position: 0 0, 0 100%, 0 0, 0 100%;
+  background-size: 100% 50px, 100% 50px, 100% 20px, 100% 20px;
+  background-repeat: no-repeat;
+  background-color: #fff;
+  background-attachment: local, local, scroll, scroll;
+}
+
+.js-skills-selected {
+  display: flex;
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.list-item-skills {
+  display: inline-block;
+  margin-top: 0px;
+  margin-right: 6px;
+}
+
+.list-item-container {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'proxima-nova', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 600;
+  border-radius: 3px;
+  padding: 0px 12px;
+  background-color: #e4f0fc;
+  color: #5ea5ee;
+  height: 35px;
+}
+
+.text-span-skills {
+  font-family: 'proxima-nova', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: #5ea5ee;
+  width: 100%;
+}
+
+.list-item-inner-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+}
+
+.close-span {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  user-select: none;
+  justify-content: center;
+}
+
+.close-button-svg {
+  max-width: 18px;
+  max-height: 18px;
+}
