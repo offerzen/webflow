@@ -10,20 +10,20 @@ $loaded(
       const $formError = $formContainer.find('.js-form-error');
       const $formSuccess = $formContainer.find('.js-form-success');
       const $submitBtn = $form.find('input[type=\'submit\']');
-  
+
       $buttonLoader.hide();
       $submitBtn.show();
-  
+
       function submitForm () {
         const data = formToJSON($form.serializeArray());
         $submitBtn.prop('disabled', true);
         $submitBtn.text('Subscribing...');
         $formError.hide();
-  
-        var oldRecaptchaValue = data["g-recaptcha-response-data[blog_registration_community]"]
-        data["g-recaptcha-response-data"]= { "blog_registration_community": oldRecaptchaValue }
-        delete data["g-recaptcha-response-data[blog_registration_community]"]
-  
+
+        var oldRecaptchaValue = data["g-recaptcha-response-data[webflow]"]
+        data["g-recaptcha-response-data"]= { "webflow": oldRecaptchaValue }
+        delete data["g-recaptcha-response-data[webflow]"]
+
         // This submit will only run if the parsley validation defined in the HTML passed
         $.ajax({
           url: `/blog/subscribe`,
@@ -45,8 +45,8 @@ $loaded(
           var responseBody = request.responseJSON
           if (responseBody && responseBody.recaptcha_verify) {
             var recaptchaPart = error.part
-            grecaptcha.execute('6LdyT_MUAAAAAIodzZ8Ty-ZV-_1PGFmV2M70eMY-', {action: `blog_registration_community`}).then(function(token) {
-              var element = document.getElementById('g-recaptcha-response-data-blog-registration-community');
+            grecaptcha.execute('6Lf802weAAAAAHgxndx9NIZ3FTzdG3f7nBua2rRY', {action: `webflow`}).then(function(token) {
+              var element = document.getElementById('g-recaptcha-response-data-webflow');
               element.value = token;
             });
             notice = 'ReCAPTCHA failed. Please try again.';
@@ -62,16 +62,16 @@ $loaded(
           $submitBtn.text('Subscribe');
         });
       }
-  
+
       $form.on('submit', e => {
         // todo: only stop do these if any required fields are missing
         e.preventDefault();
         e.stopPropagation()
         e.stopImmediatePropagation()
-        
+
         grecaptcha.ready(function() {
-          grecaptcha.execute('6LdyT_MUAAAAAIodzZ8Ty-ZV-_1PGFmV2M70eMY-', {action: 'blog_registration_community'}).then(function(token) {
-            var element = document.getElementById('g-recaptcha-response-data-blog-registration-community');
+          grecaptcha.execute('6Lf802weAAAAAHgxndx9NIZ3FTzdG3f7nBua2rRY', {action: 'webflow'}).then(function(token) {
+            var element = document.getElementById('g-recaptcha-response-data-webflow');
             element.value = token;
             submitForm();
           });
@@ -88,7 +88,7 @@ $loaded(
         return acc;
       }, {})
     }
-  
+
     $(document).ready(ready);
     $(document).on('page:load', ready);
   }
