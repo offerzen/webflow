@@ -58,7 +58,9 @@ window.$loaded(function (window, document, $, undefined) {
         hiringSkills.push($(this).text())
       })
       var uniqSkills = new Set(hiringSkills)
-      form.find('input[name=skills_hiring_for]').val(Array.from(uniqSkills).join(', '))
+      form
+        .find('input[name=skills_hiring_for]')
+        .val(Array.from(uniqSkills).join(', '))
 
       const formData = new FormData(form[0])
       const formProperties = Object.fromEntries(formData.entries())
@@ -229,30 +231,70 @@ window.$loaded(function (window, document, $, undefined) {
       skillsItem.on('click', function (e) {
         addSkillToSelected(skills[i], e)
         $('.js-skills-results').remove()
-        $('.js-search-skills').val("")
+        $('.js-skills-search').val('')
       })
       skillsResultsUl.append(skillsItem)
     }
+
+    if (skills.length === 0) {
+      var skillsItem = $(document.createElement('li')).text(
+        "Add '" + $('.js-skills-search').val() + "'"
+      )
+      skillsItem.addClass('js-skills-item-result')
+      skillsItem.on('click', function (e) {
+        addSkillToSelected(
+          {
+            id: -1,
+            text: $('.js-skills-search').val(),
+          },
+          e
+        )
+        $('.js-skills-results').remove()
+        $('.js-skills-search').val('')
+      })
+      skillsResultsUl.append(skillsItem)
+    }
+
     $('.skills-top-container').prepend(skillsResultsUl)
   }
+
+  $('#wf-Company-Lead-Form').on('keyup', function (e) {
+    if (e.keyCode == 13) {
+      e.preventDefault()
+      e.stopImmediatePropagation()
+      e.stopPropagation()
+      return false
+    }
+  })
 
   $('.js-skills-search').on('keyup', function (e) {
     $('.js-skills-results').remove()
     var input = $(e.currentTarget)
     var inputValue = input.val()
-    if (inputValue.length > 2) {
-      $.ajax({
-        type: 'GET',
-        url:
-          'https://69eb-102-132-191-60.ngrok.io/zadev/search/skills?term=' +
-          inputValue +
-          '',
-        contentType: 'application/json',
-        success: function (skills) {
-          $('.js-skills-results').remove()
-          addSkillsToResults(skills)
+    if (e.keyCode == 13) {
+      addSkillToSelected(
+        {
+          id: -1,
+          text: $('.js-skills-search').val(),
         },
-      })
+        e
+      )
+      $('.js-skills-search').val('')
+    } else {
+      if (inputValue.length > 2) {
+        $.ajax({
+          type: 'GET',
+          url:
+            'https://f470-102-132-191-60.ngrok.io/zadev/search/skills?term=' +
+            inputValue +
+            '',
+          contentType: 'application/json',
+          success: function (skills) {
+            $('.js-skills-results').remove()
+            addSkillsToResults(skills)
+          },
+        })
+      }
     }
   })
 })
