@@ -267,8 +267,14 @@ window.$loaded(function (window, document, $, undefined) {
     }
   })
 
+  $('.js-skills-search').focusout(function () {
+    setTimeout(function () {
+      $('.js-skills-results').remove()
+    }, 500)
+  })
+  
+  let skillResults = []
   $('.js-skills-search').on('keyup', function (e) {
-    $('.js-skills-results').remove()
     var input = $(e.currentTarget)
     var inputValue = input.val()
     if (e.keyCode == 13) {
@@ -280,21 +286,22 @@ window.$loaded(function (window, document, $, undefined) {
         e
       )
       $('.js-skills-search').val('')
+      $('.js-skills-results').remove()
+      input.focus()
     } else {
-      if (inputValue.length > 2) {
-        $.ajax({
-          type: 'GET',
-          url:
-            'https://f470-102-132-191-60.ngrok.io/zadev/search/skills?term=' +
-            inputValue +
-            '',
-          contentType: 'application/json',
-          success: function (skills) {
-            $('.js-skills-results').remove()
-            addSkillsToResults(skills)
-          },
-        })
-      }
+      $('.js-skills-results').remove()
+      $.ajax({
+        type: 'GET',
+        url:
+          'https://f470-102-132-191-60.ngrok.io/zadev/search/skills?term=' +
+          inputValue +
+          '',
+        contentType: 'application/json',
+        success: function (skills) {
+          $('.js-skills-results').remove()
+          addSkillsToResults(skills)
+        },
+      })
     }
   })
 })
