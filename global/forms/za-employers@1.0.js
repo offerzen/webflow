@@ -225,6 +225,7 @@ window.$loaded(function (window, document, $, undefined) {
     var skillsResultsUl = $(document.createElement('ul')).addClass(
       'js-skills-results'
     )
+
     for (let i = 0; i < skills.length; i++) {
       var skillsItem = $(document.createElement('li')).text(skills[i].text)
       skillsItem.addClass('js-skills-item-result')
@@ -236,48 +237,11 @@ window.$loaded(function (window, document, $, undefined) {
       skillsResultsUl.append(skillsItem)
     }
 
-    if (skills.length === 0) {
-      var skillsItem = $(document.createElement('li')).text(
-        "Add '" + $('.js-skills-search').val() + "'"
-      )
-      skillsItem.addClass('js-skills-item-result')
-      skillsItem.on('click', function (e) {
-        addSkillToSelected(
-          {
-            id: -1,
-            text: $('.js-skills-search').val(),
-          },
-          e
-        )
-        $('.js-skills-results').remove()
-        $('.js-skills-search').val('')
-      })
-      skillsResultsUl.append(skillsItem)
-    }
-
-    $('.skills-top-container').prepend(skillsResultsUl)
-  }
-
-  $('#wf-Company-Lead-Form').on('keyup', function (e) {
-    if (e.keyCode == 13) {
-      e.preventDefault()
-      e.stopImmediatePropagation()
-      e.stopPropagation()
-      return false
-    }
-  })
-
-  $('.js-skills-search').focusout(function () {
-    setTimeout(function () {
-      $('.js-skills-results').remove()
-    }, 500)
-  })
-  
-  let skillResults = []
-  $('.js-skills-search').on('keyup', function (e) {
-    var input = $(e.currentTarget)
-    var inputValue = input.val()
-    if (e.keyCode == 13) {
+    var skillsItem = $(document.createElement('li')).text(
+      "Add '" + $('.js-skills-search').val() + "'"
+    )
+    skillsItem.addClass('js-skills-item-result')
+    skillsItem.on('click', function (e) {
       addSkillToSelected(
         {
           id: -1,
@@ -285,19 +249,78 @@ window.$loaded(function (window, document, $, undefined) {
         },
         e
       )
+      $('.js-skills-results').remove()
+      $('.js-skills-search').val('')
+    })
+    skillsResultsUl.append(skillsItem)
+
+    $('.skills-top-container').prepend(skillsResultsUl)
+  }
+
+  var submitWithEnter = false
+  $('#wf-Company-Lead-Form').on('keyup', function (e) {
+    if (e.keyCode === 13) {
+      submitWithEnter = true
+    } else {
+      submitWithEnter = false
+    }
+  })
+
+  $('#wf-Company-Lead-Form').on('submit', function (e) {
+    e.preventDefault()
+    $('.js-skills-results').remove()
+    setTimeout(function () {
+      if (!submitWithEnter) {
+        grecaptcha.ready(function () {
+          grecaptcha
+            .execute('6Lf802weAAAAAHgxndx9NIZ3FTzdG3f7nBua2rRY', {
+              action: 'webflow',
+            })
+            .then(window.onSubmitCompanyLeadForm)
+        })
+      } else {
+        submitWithEnter = false
+      }
+    }, 100)
+  })
+
+  $('.js-skills-search').focusout(function () {
+    setTimeout(function () {
+      $('.js-skills-results').remove()
+    }, 200)
+  })
+
+  var skillList = []
+  $('.js-skills-search').on('keyup', function (e) {
+    var input = $(e.currentTarget)
+    var inputValue = input.val()
+    if (e.keyCode == 13 && inputValue.length > 0) {
+      if (skillList.length > 0) {
+        addSkillToSelected(skillList[0], e)
+      } else {
+        addSkillToSelected(
+          {
+            id: -1,
+            text: inputValue,
+          },
+          e
+        )
+      }
       $('.js-skills-search').val('')
       $('.js-skills-results').remove()
       input.focus()
+      skillList = []
     } else {
       $('.js-skills-results').remove()
       $.ajax({
         type: 'GET',
         url:
-          'https://f470-102-132-191-60.ngrok.io/zadev/search/skills?term=' +
+          'https://19d8-102-222-181-203.ngrok.io/zadev/search/skills?term=' +
           inputValue +
           '',
         contentType: 'application/json',
         success: function (skills) {
+          skillList = skills
           $('.js-skills-results').remove()
           addSkillsToResults(skills)
         },
