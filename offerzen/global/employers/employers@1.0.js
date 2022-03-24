@@ -35,38 +35,34 @@ window.$loaded(function (window, document, $, undefined) {
     return role_types
   }
 
-  window.onSubmitCompanyLeadForm = function (token) {
+  function tracking() {
+    dataLayer.push({
+      event: 'Company Lead Form Submitted ',
+      action: 'Lead Form Submitted',
+      label: 'Company Sign Up / Employer Landing Page',
+      category: 'Core',
+      source: 'Demand Sign Up',
+    })
+  }
+
+  window.onSubmitCompanyLeadForm = function (token, e) {
     window.$parsleyLoaded(function (window, document, parsley) {
       form = $('#wf-Company-Lead-Form')
       form.find('input[type=submit]').attr('disabled', true)
       var initialButtonValue = form.find('input[type=submit]').attr('value')
       var dataWait = form.find('input[type=submit]').attr('data-wait')
       form.find('input[type=submit]').attr('value', dataWait)
-
       // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
       var searchParams = new URLSearchParams(window.location.search)
-      form
-        .find('input[name=report_source]')
-        .val(searchParams.get('report_source'))
-
-      // Set the referrer value to the current URL so the rails form handler knows where to redirect you
-      form.find('input[name=referrer]').val(location.href)
-
       // Set skills_hiring_for
       var hiringSkills = []
       $('.text-span-skills').each(function () {
         hiringSkills.push($(this).text())
       })
       var uniqSkills = new Set(hiringSkills)
-      form
-        .find('input[name=skills_hiring_for]')
-        .val(Array.from(uniqSkills).join(', '))
-
       const formData = new FormData(form[0])
       const formProperties = Object.fromEntries(formData.entries())
       const role_types = getRoleTypes(formData, formProperties)
-
-      form.find('input[name=workplace_policy]').val(role_types.join(','))
 
       /*if (role_types.length < 1) {
           $('.role-type-error-container').html(
@@ -75,10 +71,33 @@ window.$loaded(function (window, document, $, undefined) {
         } else {
           $('.role-type-error-container').html('')
         }*/
-
       if (form.parsley().validate() /* && role_types.length > 0 */) {
         $('.js-missing-fields').hide()
-        form.submit()
+        tracking()
+        $.ajax({
+          type: 'POST',
+          url: 'https://518a-102-222-181-203.ngrok.io/zadev/company/form_leads',
+          data: JSON.stringify(
+            Object.assign({}, formProperties, {
+              workplace_policy: role_types.join(','),
+              skills_hiring_for: Array.from(uniqSkills).join(', '),
+              referrer: location.href,
+              report_source: searchParams.get('report_source'),
+              'g-recaptcha-response-data': {
+                webflow: token,
+              },
+            })
+          ),
+          contentType: 'application/json',
+          headers: {
+            Accept: 'application/json',
+          },
+          success: function (data) {
+            if (data.user_id) {
+              window.location.href = data.redirect_url
+            }
+          },
+        })
       } else {
         $('.js-missing-fields').show()
         form.find('input[type=submit]').attr('disabled', false)
@@ -130,7 +149,6 @@ window.$loaded(function (window, document, $, undefined) {
   })
 
   //Check Recaptcha error
-
   const urlParams = new URLSearchParams(window.location.search)
   if (urlParams.has('r')) {
     $('.recaptcha-error').show()
@@ -178,18 +196,6 @@ window.$loaded(function (window, document, $, undefined) {
 
 // Skills fields
 window.$loaded(function (window, document, $, undefined) {
-  function clearPreviousResults() {
-    var skillsParent = $('.js-skills-results-container')
-    var dataBlocks = skillsParent.find('.data-card')
-    if (dataBlocks.length > 1) {
-      for (i = 0; i < dataBlocks.length; i++) {
-        if (i > 0) {
-          $(dataBlocks[i]).remove()
-        }
-      }
-    }
-  }
-
   function removeSkillItem(e) {
     $(e.currentTarget).parent().parent().remove()
   }
@@ -302,7 +308,9 @@ window.$loaded(function (window, document, $, undefined) {
             .execute('6Lf802weAAAAAHgxndx9NIZ3FTzdG3f7nBua2rRY', {
               action: 'webflow',
             })
-            .then(window.onSubmitCompanyLeadForm)
+            .then(function (token) {
+              window.onSubmitCompanyLeadForm(token, e)
+            })
         })
       } else {
         submitWithEnter = false
@@ -340,10 +348,7 @@ window.$loaded(function (window, document, $, undefined) {
       $('.js-skills-results').remove()
       $.ajax({
         type: 'GET',
-        url:
-          'https://offerzen.com/zadev/search/skills?term=' +
-          inputValue +
-          '',
+        url: 'https://offerzen.com/zadev/search/skills?term=' + inputValue + '',
         contentType: 'application/json',
         success: function (skills) {
           skillList = skills
