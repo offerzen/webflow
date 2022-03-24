@@ -341,7 +341,7 @@ window.$loaded(function (window, document, $, undefined) {
       $.ajax({
         type: 'GET',
         url:
-          'https://518a-102-222-181-203.ngrok.io/zadev/search/skills?term=' +
+          'https://offerzen.com/zadev/search/skills?term=' +
           inputValue +
           '',
         contentType: 'application/json',
