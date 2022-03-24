@@ -1,3 +1,4 @@
+
 html {
   scroll-behavior: smooth;
 }
@@ -142,10 +143,11 @@ html {
   color: #5c5c5c;
 }
 
-.js-skills-item-result:hover {
-  background-color: #e4f0fc;
-  color: #5ea5ee;
-}
+ .js-skills-item-hover {
+    background-color: #e4f0fc;
+    color: #5ea5ee;
+  }
+
 
 .js-skills-results {
   list-style: none;

@@ -225,12 +225,27 @@ window.$loaded(function (window, document, $, undefined) {
     var skillsResultsUl = $(document.createElement('ul')).addClass(
       'js-skills-results'
     )
-
-    for (let i = 0; i < skills.length; i++) {
+    for (var i = 0; i < skills.length; i++) {
       var skillsItem = $(document.createElement('li')).text(skills[i].text)
       skillsItem.addClass('js-skills-item-result')
+      if (i === 0) {
+        skillsItem.addClass('js-skills-item-hover')
+      } else {
+        skillsItem.removeClass('js-skills-item-hover')
+      }
+      const skill = skills[i]
+
+      $(skillsItem).on('mouseover', function (e) {
+        $('.js-skills-item-result').removeClass('js-skills-item-hover')
+        $(this).addClass('js-skills-item-hover')
+      })
+
+      $(skillsItem).on('mouseout', function (e) {
+        $(this).removeClass('js-skills-item-hover')
+      })
+
       skillsItem.on('click', function (e) {
-        addSkillToSelected(skills[i], e)
+        addSkillToSelected(skill, e)
         $('.js-skills-results').remove()
         $('.js-skills-search').val('')
       })
@@ -240,7 +255,18 @@ window.$loaded(function (window, document, $, undefined) {
     var skillsItem = $(document.createElement('li')).text(
       "Add '" + $('.js-skills-search').val() + "'"
     )
+
     skillsItem.addClass('js-skills-item-result')
+
+    $(skillsItem).on('mouseover', function (e) {
+      $('.js-skills-item-result').removeClass('js-skills-item-hover')
+      $(this).addClass('js-skills-item-hover')
+    })
+
+    $(skillsItem).on('mouseout', function (e) {
+      $(this).removeClass('js-skills-item-hover')
+    })
+
     skillsItem.on('click', function (e) {
       addSkillToSelected(
         {
@@ -315,7 +341,7 @@ window.$loaded(function (window, document, $, undefined) {
       $.ajax({
         type: 'GET',
         url:
-          'https://19d8-102-222-181-203.ngrok.io/zadev/search/skills?term=' +
+          'https://518a-102-222-181-203.ngrok.io/zadev/search/skills?term=' +
           inputValue +
           '',
         contentType: 'application/json',
