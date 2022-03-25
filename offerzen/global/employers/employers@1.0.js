@@ -47,7 +47,7 @@ window.$loaded(function (window, document, $, undefined) {
 
   window.onSubmitCompanyLeadForm = function (token, e) {
     window.$parsleyLoaded(function (window, document, parsley) {
-      form = $('#wf-Company-Lead-Form')
+      const form = $('#wf-Company-Lead-Form')
       form.find('input[type=submit]').attr('disabled', true)
       let initialButtonValue = form.find('input[type=submit]').attr('value')
       let dataWait = form.find('input[type=submit]').attr('data-wait')
