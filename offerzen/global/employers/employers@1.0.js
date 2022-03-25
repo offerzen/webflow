@@ -76,7 +76,7 @@ window.$loaded(function (window, document, $, undefined) {
         tracking()
         $.ajax({
           type: 'POST',
-          url: '/zadev/company/form_leads',
+          url: '/company/form_leads',
           data: JSON.stringify(
             Object.assign({}, formProperties, {
               workplace_policy: role_types.join(','),
