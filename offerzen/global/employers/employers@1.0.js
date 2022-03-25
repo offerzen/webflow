@@ -49,17 +49,17 @@ window.$loaded(function (window, document, $, undefined) {
     window.$parsleyLoaded(function (window, document, parsley) {
       form = $('#wf-Company-Lead-Form')
       form.find('input[type=submit]').attr('disabled', true)
-      var initialButtonValue = form.find('input[type=submit]').attr('value')
-      var dataWait = form.find('input[type=submit]').attr('data-wait')
+      let initialButtonValue = form.find('input[type=submit]').attr('value')
+      let dataWait = form.find('input[type=submit]').attr('data-wait')
       form.find('input[type=submit]').attr('value', dataWait)
       // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
-      var searchParams = new URLSearchParams(window.location.search)
+      let searchParams = new URLSearchParams(window.location.search)
       // Set skills_hiring_for
-      var hiringSkills = []
+      let hiringSkills = []
       $('.text-span-skills').each(function () {
         hiringSkills.push($(this).text())
       })
-      var uniqSkills = new Set(hiringSkills)
+      const uniqSkills = new Set(hiringSkills)
       const formData = new FormData(form[0])
       const formProperties = Object.fromEntries(formData.entries())
       const role_types = getRoleTypes(formData, formProperties)
@@ -113,11 +113,11 @@ window.$loaded(function (window, document, $, undefined) {
   })()
 
   //Intl-tel-input
-  var input = document.querySelector('#phone-number'),
+  let input = document.querySelector('#phone-number'),
     dialCode = document.querySelector('#dial_code'),
     contact_phone = document.querySelector('#contact_phone')
 
-  var iti = intlTelInput(input, {
+  const iti = intlTelInput(input, {
     initialCountry: 'za',
     placeholderNumberType: 'FIXED_LINE',
     autoPlaceholder: 'polite',
@@ -127,7 +127,7 @@ window.$loaded(function (window, document, $, undefined) {
     dropdownContainer: document.getElementById('js-phone-dropdown'),
   })
 
-  var updateContactPhoneValue = function (event) {
+  const updateContactPhoneValue = function (event) {
     dialCode.value = '+' + iti.getSelectedCountryData().dialCode
     contact_phone.value =
       dialCode.value +
@@ -139,9 +139,9 @@ window.$loaded(function (window, document, $, undefined) {
 
   window.$parsleyLoaded(function (window, document, parsley) {
     window.parsley.addValidator('phonenumber', function (value) {
-      var code = '+' + iti.getSelectedCountryData().dialCode
-      var cleanValue = value.replace(code, '0')
-      var match = cleanValue
+      let code = '+' + iti.getSelectedCountryData().dialCode
+      let cleanValue = value.replace(code, '0')
+      let match = cleanValue
         .replace(/[^0-9]/g, '')
         .match(/^(\+[0-9]{2,3})?([0-9]){9,10}$/)
       return !!match
@@ -203,19 +203,19 @@ window.$loaded(function (window, document, $, undefined) {
   function addSkillToSelected(skill, e) {
     $('.js-skills-selected').show()
 
-    var listItem = $(document.createElement('li')).addClass('list-item-skills')
+    let listItem = $(document.createElement('li')).addClass('list-item-skills')
     listItem.data('id', skill.id)
-    var itemContainer = $(document.createElement('div')).addClass(
+    let itemContainer = $(document.createElement('div')).addClass(
       'list-item-container'
     )
-    var textSpan = $(document.createElement('span')).text(skill.text)
+    let textSpan = $(document.createElement('span')).text(skill.text)
     textSpan.addClass('text-span-skills')
-    var innerContainer = $(document.createElement('div')).addClass(
+    let innerContainer = $(document.createElement('div')).addClass(
       'list-item-inner-container'
     )
     innerContainer.on('click', removeSkillItem)
-    var closeSpan = $(document.createElement('span')).addClass('close-span')
-    var svg = $(
+    let closeSpan = $(document.createElement('span')).addClass('close-span')
+    let svg = $(
       "<svg class='close-button-svg' fill='#5EA5EE' width='1024' height='1024' viewBox='0 0 1024 1024' preserveAspectRatio='xMidYMid meet'><path d='M776.851 695.153c16.64 16.619 16.64 43.733 0 60.373-8.32 8.32-19.179 12.587-30.080 12.587-10.88 0-21.952-4.267-30.293-12.587l-193.707-193.707-193.92 193.707c-8.32 8.32-19.179 12.587-30.080 12.587-10.88 0-21.952-4.267-30.293-12.587-16.64-16.64-16.64-43.755 0-60.373l193.941-193.707-193.941-193.92c-16.64-16.64-16.64-43.733 0-60.373s43.733-16.64 60.373 0l193.92 193.92 193.707-193.92c16.64-16.64 43.733-16.64 60.373 0s16.64 43.733 0 60.373l-193.707 193.92 193.707 193.707z'></path></svg>"
     )
 
@@ -258,7 +258,7 @@ window.$loaded(function (window, document, $, undefined) {
       skillsResultsUl.append(skillsItem)
     }
 
-    var skillsItem = $(document.createElement('li')).text(
+    let skillsItem = $(document.createElement('li')).text(
       "Add '" + $('.js-skills-search').val() + "'"
     )
 
@@ -324,10 +324,10 @@ window.$loaded(function (window, document, $, undefined) {
     }, 200)
   })
 
-  var skillList = []
+  let skillList = []
   $('.js-skills-search').on('keyup', function (e) {
-    var input = $(e.currentTarget)
-    var inputValue = input.val()
+    let input = $(e.currentTarget)
+    let inputValue = input.val()
     if (e.keyCode == 13 && inputValue.length > 0) {
       if (skillList.length > 0) {
         addSkillToSelected(skillList[0], e)
