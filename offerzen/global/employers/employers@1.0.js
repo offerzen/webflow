@@ -76,7 +76,7 @@ window.$loaded(function (window, document, $, undefined) {
         tracking()
         $.ajax({
           type: 'POST',
-          url: 'https://518a-102-222-181-203.ngrok.io/zadev/company/form_leads',
+          url: '/zadev/company/form_leads',
           data: JSON.stringify(
             Object.assign({}, formProperties, {
               workplace_policy: role_types.join(','),
@@ -348,7 +348,7 @@ window.$loaded(function (window, document, $, undefined) {
       $('.js-skills-results').remove()
       $.ajax({
         type: 'GET',
-        url: 'https://offerzen.com/zadev/search/skills?term=' + inputValue + '',
+        url: '/search/skills?term=' + inputValue + '',
         contentType: 'application/json',
         success: function (skills) {
           skillList = skills
