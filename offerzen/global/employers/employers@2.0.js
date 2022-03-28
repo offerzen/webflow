@@ -231,8 +231,9 @@ window.$loaded(function (window, document, $, undefined) {
     var skillsResultsUl = $(document.createElement('ul')).addClass(
       'js-skills-results'
     )
+    let skillsItem
     for (var i = 0; i < skills.length; i++) {
-      var skillsItem = $(document.createElement('li')).text(skills[i].text)
+      skillsItem = $(document.createElement('li')).text(skills[i].text)
       skillsItem.addClass('js-skills-item-result')
       if (i === 0) {
         skillsItem.addClass('js-skills-item-hover')
@@ -258,7 +259,7 @@ window.$loaded(function (window, document, $, undefined) {
       skillsResultsUl.append(skillsItem)
     }
 
-    let skillsItem = $(document.createElement('li')).text(
+    skillsItem = $(document.createElement('li')).text(
       "Add '" + $('.js-skills-search').val() + "'"
     )
 
