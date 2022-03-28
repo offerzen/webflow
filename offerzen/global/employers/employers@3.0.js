@@ -128,10 +128,13 @@ window.$loaded(function (window, document, $, undefined) {
   })
 
   const updateContactPhoneValue = function (event) {
-    dialCode.value = '+' + iti.getSelectedCountryData().dialCode
-    contact_phone.value =
-      dialCode.value +
-      input.value.replace(/[ \-\(\)]/g, '').replace(/\+([0-9]{2})|([0])/g, '')
+    dialCode.value = '+' + iti.getSelectedCountryData().dialCode;
+
+    const matchDialCode = new RegExp(`^\\${dialCode.value}`); // only search start of string for matching code
+    const justDigits = input.value.replace(/[^\d]/g, '');
+    const withoutDialCode = justDigits.replace(matchDialCode, '');
+
+    contact_phone.value = dialCode.value + withoutDialCode;
   }
 
   input.addEventListener('input', updateContactPhoneValue, false)
