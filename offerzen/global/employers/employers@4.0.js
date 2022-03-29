@@ -147,9 +147,12 @@ window.$loaded(function (window, document, $, undefined) {
 
       const cleanValue = value.replace(/[^\+0-9]/g, '');
 
-      const dialCodeMatch = new RegExp(`^(\\${dialCodeValue}|0)?[0-9]{9}$`)
-      const match = cleanValue.match(dialCodeMatch);
-
+      // TODO: remove, just for reference in code review.
+      // const dialCodeMatch = new RegExp(`^(\\${dialCodeValue}|0)?[0-9]{9}$`)
+      // previous issue let through 123 1234
+      let match = cleanValue.match(new RegExp(`^\\${dialCodeValue}[0-9]{9}$`)); // country code with 9 digits e.g. +27 21 123 1234
+      match   ||= cleanValue.match(new RegExp(/^0[0-9]{9}$/));                  // zero with 9 digits e.g. 0 21 123 1234
+      match   ||= cleanValue.match(new RegExp(/^[1-9][0-9]{8}$/));              // no zero with 9 digits e.g. 21 123 1234
       return !!match
     })
   })
