@@ -130,7 +130,7 @@ window.$loaded(function (window, document, $, undefined) {
   const updateContactPhoneValue = function (event) {
     dialCode.value = '+' + iti.getSelectedCountryData().dialCode;
 
-    const matchDialCode = new RegExp(`^\\${dialCode.value}`); // only search start of string for matching code
+    const matchDialCode = new RegExp(`^(\\${dialCodeValue}|0)`); // only search start of string for matching code
     const justDigits = input.value.replace(/[^\d]/g, '');
     const withoutDialCode = justDigits.replace(matchDialCode, '');
 
