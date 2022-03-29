@@ -145,14 +145,15 @@ window.$loaded(function (window, document, $, undefined) {
     window.parsley.addValidator('phonenumber', function (value) {
       const dialCodeValue = '+' + iti.getSelectedCountryData().dialCode
 
-      const cleanValue = value.replace(/[^\+0-9]/g, '');
+      const cleanValue = value.replace(/[ ()\-]/g, ''); // ensure we only remove expected extras so other characters are shown as errors
 
-      // TODO: remove, just for reference in code review.
-      // const dialCodeMatch = new RegExp(`^(\\${dialCodeValue}|0)?[0-9]{9}$`)
-      // previous issue let through 123 1234
-      let match = cleanValue.match(new RegExp(`^\\${dialCodeValue}[0-9]{9}$`)); // country code with 9 digits e.g. +27 21 123 1234
-      match   ||= cleanValue.match(new RegExp(/^0[0-9]{9}$/));                  // zero with 9 digits e.g. 0 21 123 1234
-      match   ||= cleanValue.match(new RegExp(/^[1-9][0-9]{8}$/));              // no zero with 9 digits e.g. 21 123 1234
+      // Match will be slightly lenient due to multiple countries having different length formats
+      // country code with 7-11 digits e.g. +27 21 123 1234
+      // leading zero with 7-11 digits e.g. 0 21 123 1234
+      // no leading zero with 7-11 digits e.g. 21 123 1234
+      const dialCodeMatch = new RegExp(`^(\\${dialCodeValue}|0)?[0-9]{7,11}$`);
+      let match = cleanValue.match(dialCodeMatch);
+
       return !!match
     })
   })
