@@ -142,11 +142,11 @@ window.$loaded(function (window, document, $, undefined) {
 
   window.$parsleyLoaded(function (window, document, parsley) {
     window.parsley.addValidator('phonenumber', function (value) {
-      const dialCode = '+' + iti.getSelectedCountryData().dialCode
+      const dialCodeValue = '+' + iti.getSelectedCountryData().dialCode
 
       const cleanValue = value.replace(/[^\+0-9]/g, '');
 
-      const dialCodeMatch = new RegExp(`^(\\${dialCode}|0)?[0-9]{9}$`)
+      const dialCodeMatch = new RegExp(`^(\\${dialCodeValue}|0)?[0-9]{9}$`)
       const match = cleanValue.match(dialCodeMatch);
 
       return !!match
