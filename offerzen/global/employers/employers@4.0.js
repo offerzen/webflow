@@ -147,12 +147,31 @@ window.$loaded(function (window, document, $, undefined) {
 
       const cleanValue = value.replace(/[ ()\-]/g, ''); // ensure we only remove expected extras so other characters are shown as errors
 
-      // Match will be slightly lenient due to multiple countries having different length formats
-      // country code with 7-11 digits e.g. +27 21 123 1234
-      // leading zero with 7-11 digits e.g. 0 21 123 1234
-      // no leading zero with 7-11 digits e.g. 21 123 1234
-      const dialCodeMatch = new RegExp(`^(\\${dialCodeValue}|0)?[0-9]{7,11}$`);
-      let match = cleanValue.match(dialCodeMatch);
+      // simplify the lower regex by removing leading dial code or zero
+      // nsn are the digits after international dial code
+      const matchDialCode = new RegExp(`^(\\${dialCodeValue}|0)`);
+      const nsnValue = cleanValue.replace(matchDialCode, '');
+
+      let match = null;
+
+      // FORMATS (+<country code> <NSN length>) to consider based on expansion plans March 2022:
+      // South Africa:           +27 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_South_Africa
+      // Netherlands:            +31 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Netherlands
+      // Germany:                +49 <7-11>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Germany
+      // Portugal:               +351 <9>      https://en.wikipedia.org/wiki/Telephone_numbers_in_Portugal
+      // Spain:                  +34 <8-9>     https://en.wikipedia.org/wiki/Telephone_numbers_in_Spain
+      // Italy:                  +39 <8-10>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Italy
+      // Ireland:                +353 <7-9>    https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Republic_of_Ireland
+      // Northern Ireland / UK:  +44 <7,9,10>  https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Kingdom
+
+      // Strict for core countries with 9 NSN: South Africa, Netherlands
+      if (dialCodeValue.match(/\+(27|31)/)) {
+        match = nsnValue.match(/^[0-9]{9}$/);
+      }
+      // Loose for others, NSN=7..11, with 1 extra in case on either side i.e. 6..12
+      else {
+        match = nsnValue.match(/^[0-9]{6,12}$/);
+      }
 
       return !!match
     })
