@@ -112,6 +112,7 @@ window.$loaded(function (window, document, $, undefined) {
     })
   })()
 
+  let canValidate = false;
   //Intl-tel-input
   let input = document.querySelector('#phone-number'),
     dialCode = document.querySelector('#dial_code'),
@@ -138,8 +139,21 @@ window.$loaded(function (window, document, $, undefined) {
     contact_phone.value = dialCode.value + withoutDialCode;
   }
 
+  const forceValidate = function () {
+    if (!canValidate) return;
+
+    $(input).parsley().validate();
+  }
+
+  function setAllowValidation () {
+    canValidate = true;
+  }
+
   input.addEventListener('input', updateContactPhoneValue, false)
   input.addEventListener('countrychange', updateContactPhoneValue, false)
+  input.addEventListener("countrychange",forceValidate, false);
+  input.addEventListener("input", forceValidate, false);
+  window.Parsley.on('field:error', setAllowValidation);
 
   window.$parsleyLoaded(function (window, document, parsley) {
     window.parsley.addValidator('phonenumber', function (value) {
