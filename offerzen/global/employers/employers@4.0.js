@@ -1,5 +1,5 @@
 window.$loaded(function (window, document, $, undefined) {
-  ;(function () {
+  ; (function () {
     window.$parsleyLoaded = function (cb) {
       setTimeout(() => {
         if (window.Parsley && window.ParsleyValidator) {
@@ -9,44 +9,44 @@ window.$loaded(function (window, document, $, undefined) {
         $parsleyLoaded(cb)
       }, 50)
     }
-  })()
+  })();
 
-  function getRoleTypes(formData, formProperties) {
-    let fields = [
-      'role_type[In-office]',
-      'role_type[Fully-remote]',
-      'role_type[Hybrid]',
-    ]
-    let role_types = []
+  window.$parsleyLoaded(function (window, document, parsley) {
+    function getRoleTypes(formData, formProperties) {
+      let fields = [
+        'role_type[In-office]',
+        'role_type[Fully-remote]',
+        'role_type[Hybrid]',
+      ]
+      let role_types = []
 
-    for (let key in formProperties) {
-      if (fields.includes(key) && formProperties[key] === 'on') {
-        if (key === 'role_type[Fully-remote]') {
-          role_types.push(
-            key.replace('role_type[', '').replace(']', '').replace('-', ' ')
-          )
-        } else {
-          role_types.push(key.replace('role_type[', '').replace(']', ''))
+      for (let key in formProperties) {
+        if (fields.includes(key) && formProperties[key] === 'on') {
+          if (key === 'role_type[Fully-remote]') {
+            role_types.push(
+              key.replace('role_type[', '').replace(']', '').replace('-', ' ')
+            )
+          } else {
+            role_types.push(key.replace('role_type[', '').replace(']', ''))
+          }
+          delete formProperties[key]
         }
-        delete formProperties[key]
       }
+
+      return role_types
     }
 
-    return role_types
-  }
+    function tracking() {
+      dataLayer.push({
+        event: 'Company Lead Form Submitted ',
+        action: 'Lead Form Submitted',
+        label: 'Company Sign Up / Employer Landing Page',
+        category: 'Core',
+        source: 'Demand Sign Up',
+      })
+    }
 
-  function tracking() {
-    dataLayer.push({
-      event: 'Company Lead Form Submitted ',
-      action: 'Lead Form Submitted',
-      label: 'Company Sign Up / Employer Landing Page',
-      category: 'Core',
-      source: 'Demand Sign Up',
-    })
-  }
-
-  window.onSubmitCompanyLeadForm = function (token, e) {
-    window.$parsleyLoaded(function (window, document, parsley) {
+    window.onSubmitCompanyLeadForm = function (token, e) {
       const form = $('#wf-Company-Lead-Form')
       form.find('input[type=submit]').attr('disabled', true)
       let initialButtonValue = form.find('input[type=submit]').attr('value')
@@ -64,13 +64,6 @@ window.$loaded(function (window, document, $, undefined) {
       const formProperties = Object.fromEntries(formData.entries())
       const role_types = getRoleTypes(formData, formProperties)
 
-      /*if (role_types.length < 1) {
-          $('.role-type-error-container').html(
-            '<ul class="parsley-errors-list filled js-missing-fields"><li class="parsley-required">This field is required</li></ul>'
-          )
-        } else {
-          $('.role-type-error-container').html('')
-        }*/
       if (form.parsley().validate() /* && role_types.length > 0 */) {
         $('.js-missing-fields').hide()
         tracking()
@@ -103,95 +96,132 @@ window.$loaded(function (window, document, $, undefined) {
         form.find('input[type=submit]').attr('disabled', false)
         form.find('input[type=submit]').attr('value', initialButtonValue)
       }
+
+    }
+      ; (function updateSubscribeToHiringInsightsField() {
+        subscribeToCompanyNewsletter = $('#subscribe_to_company_newsletter')
+        subscribeToCompanyNewsletter.on('change', function () {
+          document.getElementById('subscribe_to_hiring_insights').value = this.value
+        })
+      })()
+
+    //Intl-tel-input
+    let input = document.querySelector('#phone-number'),
+      dialCode = document.querySelector('#dial_code'),
+      contact_phone = document.querySelector('#contact_phone')
+
+    let canValidate = false;
+
+    const iti = intlTelInput(input, {
+      initialCountry: 'za',
+      placeholderNumberType: 'FIXED_LINE',
+      autoPlaceholder: 'polite',
+      preferredCountries: ['za', 'nl', 'de'],
+      autoHideDialCode: false,
+      separateDialCode: true,
+      dropdownContainer: document.getElementById('js-phone-dropdown'),
     })
-  }
-  ;(function updateSubscribeToHiringInsightsField() {
-    subscribeToCompanyNewsletter = $('#subscribe_to_company_newsletter')
-    subscribeToCompanyNewsletter.on('change', function () {
-      document.getElementById('subscribe_to_hiring_insights').value = this.value
-    })
-  })()
 
-  //Intl-tel-input
-  let input = document.querySelector('#phone-number'),
-    dialCode = document.querySelector('#dial_code'),
-    contact_phone = document.querySelector('#contact_phone')
+    const updateContactPhoneValue = function (event) {
+      dialCode.value = '+' + iti.getSelectedCountryData().dialCode;
+      const dialCodeValue = dialCode.value;
 
-  const iti = intlTelInput(input, {
-    initialCountry: 'za',
-    placeholderNumberType: 'FIXED_LINE',
-    autoPlaceholder: 'polite',
-    preferredCountries: ['za', 'nl', 'de'],
-    autoHideDialCode: false,
-    separateDialCode: true,
-    dropdownContainer: document.getElementById('js-phone-dropdown'),
-  })
+      const matchDialCode = new RegExp(`^(\\${dialCodeValue}|0)`); // only search start of string for matching code
+      const justDigits = input.value.replace(/[^\d\+]/g, '');
+      const withoutDialCode = justDigits.replace(matchDialCode, '');
 
-  const updateContactPhoneValue = function (event) {
-    dialCode.value = '+' + iti.getSelectedCountryData().dialCode
-    contact_phone.value =
-      dialCode.value +
-      input.value.replace(/[ \-\(\)]/g, '').replace(/\+([0-9]{2})|([0])/g, '')
-  }
+      contact_phone.value = dialCode.value + withoutDialCode;
+    }
 
-  input.addEventListener('input', updateContactPhoneValue, false)
-  input.addEventListener('countrychange', updateContactPhoneValue, false)
+    const forceValidate = function () {
+      if (!canValidate) return;
 
-  window.$parsleyLoaded(function (window, document, parsley) {
+      $(input).parsley().validate();
+    }
+
+    function setAllowValidation() {
+      canValidate = true;
+    }
+
+    input.addEventListener('input', updateContactPhoneValue, false)
+    input.addEventListener('countrychange', updateContactPhoneValue, false)
+    input.addEventListener("countrychange", forceValidate, false);
+    input.addEventListener("input", forceValidate, false);
+    window.Parsley.on('field:error', setAllowValidation);
+
+
     window.parsley.addValidator('phonenumber', function (value) {
-      let code = '+' + iti.getSelectedCountryData().dialCode
-      let cleanValue = value.replace(code, '0')
-      let match = cleanValue
-        .replace(/[^0-9]/g, '')
-        .match(/^(\+[0-9]{2,3})?([0-9]){9,10}$/)
+      const dialCodeValue = '+' + iti.getSelectedCountryData().dialCode
+
+      const cleanValue = value.replace(/[ ()\-]/g, ''); // ensure we only remove expected extras so other characters are shown as errors
+
+      // simplify the lower regex by removing leading dial code or zero
+      // nsn are the digits after international dial code
+      const matchDialCode = new RegExp(`^(\\${dialCodeValue}|0)`);
+      const nsnValue = cleanValue.replace(matchDialCode, '');
+
+      let match = null;
+
+      // FORMATS (+<country code> <NSN length>) to consider based on expansion plans March 2022:
+      // South Africa:           +27 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_South_Africa
+      // Netherlands:            +31 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Netherlands
+      // Germany:                +49 <7-11>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Germany
+      // Portugal:               +351 <9>      https://en.wikipedia.org/wiki/Telephone_numbers_in_Portugal
+      // Spain:                  +34 <8-9>     https://en.wikipedia.org/wiki/Telephone_numbers_in_Spain
+      // Italy:                  +39 <8-10>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Italy
+      // Ireland:                +353 <7-9>    https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Republic_of_Ireland
+      // Northern Ireland / UK:  +44 <7,9,10>  https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Kingdom
+
+      // Strict for core countries with 9 NSN: South Africa, Netherlands
+      if (dialCodeValue.match(/\+(27|31)/)) {
+        match = nsnValue.match(/^[0-9]{9}$/);
+      }
+      // Loose for others, NSN=7..11, with 1 extra in case on either side i.e. 6..12
+      else {
+        match = nsnValue.match(/^[0-9]{6,12}$/);
+      }
+
       return !!match
     })
-  })
 
-  //Check Recaptcha error
-  const urlParams = new URLSearchParams(window.location.search)
-  if (urlParams.has('r')) {
-    $('.recaptcha-error').show()
-  }
 
-  $('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox').on(
-    'change',
-    function (e) {
-      let form = $('#wf-Company-Lead-Form')
-      const formData = new FormData(form[0])
-      const formProperties = Object.fromEntries(formData.entries())
-
-      formProperties[e.target.name] = e.target.checked ? 'on' : 'off'
-
-      const role_types = getRoleTypes(formData, formProperties)
-
-      form.find('input[name=workplace_policy]').val(role_types.join(','))
-
-      /*if (role_types.length < 1) {
-          $('.role-type-error-container').html(
-            '<ul class="parsley-errors-list filled js-missing-fields"><li class="parsley-required">This field is required</li></ul>'
-          )
-        } else {
-          $('.role-type-error-container').html('')
-        }*/
+    //Check Recaptcha error
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.has('r')) {
+      $('.recaptcha-error').show()
     }
-  )
 
-  function showFullListofTechRoles() {
-    showMoreLink = $('.js-show-more')
-    faidingList = $('.fading-list')
-    fullList = $('.full-list')
+    $('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox').on(
+      'change',
+      function (e) {
+        let form = $('#wf-Company-Lead-Form')
+        const formData = new FormData(form[0])
+        const formProperties = Object.fromEntries(formData.entries())
 
-    showMoreLink.one('click', function (e) {
-      e.preventDefault()
-      e.stopImmediatePropagation()
-      faidingList.hide()
-      fullList.show()
-      showMoreLink.hide()
-    })
-  }
+        formProperties[e.target.name] = e.target.checked ? 'on' : 'off'
 
-  showFullListofTechRoles()
+        const role_types = getRoleTypes(formData, formProperties)
+
+        form.find('input[name=workplace_policy]').val(role_types.join(','))
+      }
+    )
+
+    function showFullListofTechRoles() {
+      showMoreLink = $('.js-show-more')
+      faidingList = $('.fading-list')
+      fullList = $('.full-list')
+
+      showMoreLink.one('click', function (e) {
+        e.preventDefault()
+        e.stopImmediatePropagation()
+        faidingList.hide()
+        fullList.show()
+        showMoreLink.hide()
+      })
+    }
+
+    showFullListofTechRoles()
+  })
 })
 
 // Skills fields
