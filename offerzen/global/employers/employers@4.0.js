@@ -12,7 +12,6 @@ window.$loaded(function (window, document, $, undefined) {
   })();
 
   window.$parsleyLoaded(function (window, document, parsley) {
-
     function getRoleTypes(formData, formProperties) {
       let fields = [
         'role_type[In-office]',
@@ -65,13 +64,6 @@ window.$loaded(function (window, document, $, undefined) {
       const formProperties = Object.fromEntries(formData.entries())
       const role_types = getRoleTypes(formData, formProperties)
 
-      /*if (role_types.length < 1) {
-          $('.role-type-error-container').html(
-            '<ul class="parsley-errors-list filled js-missing-fields"><li class="parsley-required">This field is required</li></ul>'
-          )
-        } else {
-          $('.role-type-error-container').html('')
-        }*/
       if (form.parsley().validate() /* && role_types.length > 0 */) {
         $('.js-missing-fields').hide()
         tracking()
@@ -211,14 +203,6 @@ window.$loaded(function (window, document, $, undefined) {
         const role_types = getRoleTypes(formData, formProperties)
 
         form.find('input[name=workplace_policy]').val(role_types.join(','))
-
-        /*if (role_types.length < 1) {
-            $('.role-type-error-container').html(
-              '<ul class="parsley-errors-list filled js-missing-fields"><li class="parsley-required">This field is required</li></ul>'
-            )
-          } else {
-            $('.role-type-error-container').html('')
-          }*/
       }
     )
 
