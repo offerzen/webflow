@@ -71,5 +71,5 @@
     }
   )
 
-  setTimeout(loadCookieBanner, 3000);
+  setTimeout(loadCookieBanner, 1);
 }();
