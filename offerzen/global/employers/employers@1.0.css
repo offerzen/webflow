@@ -1,4 +1,3 @@
-
 html {
   scroll-behavior: smooth;
 }
@@ -143,10 +142,10 @@ html {
   color: #5c5c5c;
 }
 
- .js-skills-item-hover {
-    background-color: #e4f0fc;
-    color: #5ea5ee;
-  }
+.js-skills-item-hover {
+  background-color: #e4f0fc;
+  color: #5ea5ee;
+}
 
 
 .js-skills-results {
@@ -239,5 +238,31 @@ html {
 }
 
 .skills-top-container {
-    margin-top: -10px;
+  margin-top: -10px;
+  position:relative;
+}
+
+@media only screen and (max-width: 479px) {
+  .close-span {
+    width: 20px;
+    height: 20px;
+  }
+
+  .close-button-svg {
+    max-width: 20px;
+    max-height: 20px;
+  }
+
+  .list-item-container {
+    height: 45px;
+  }
+  .list-item-skills {
+    display: inline-block;
+    margin-top: 0px;
+    margin-right: 12px;
+    margin-bottom: 12px;
+  }
+  .text-span-skills {
+    font-size: 16px;
+  }
 }

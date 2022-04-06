@@ -258,22 +258,22 @@ window.$loaded(function (window, document, $, undefined) {
       skillsResultsUl.append(skillsItem)
     }
 
-    let skillsItem = $(document.createElement('li')).text(
+    let noSkillsItem = $(document.createElement('li')).text(
       "Add '" + $('.js-skills-search').val() + "'"
     )
 
-    skillsItem.addClass('js-skills-item-result')
+    noSkillsItem.addClass('js-skills-item-result')
 
-    $(skillsItem).on('mouseover', function (e) {
+    $(noSkillsItem).on('mouseover', function (e) {
       $('.js-skills-item-result').removeClass('js-skills-item-hover')
       $(this).addClass('js-skills-item-hover')
     })
 
-    $(skillsItem).on('mouseout', function (e) {
+    $(noSkillsItem).on('mouseout', function (e) {
       $(this).removeClass('js-skills-item-hover')
     })
 
-    skillsItem.on('click', function (e) {
+    noSkillsItem.on('click', function (e) {
       addSkillToSelected(
         {
           id: -1,
@@ -284,7 +284,7 @@ window.$loaded(function (window, document, $, undefined) {
       $('.js-skills-results').remove()
       $('.js-skills-search').val('')
     })
-    skillsResultsUl.append(skillsItem)
+    skillsResultsUl.append(noSkillsItem)
 
     $('.skills-top-container').prepend(skillsResultsUl)
   }
@@ -295,6 +295,12 @@ window.$loaded(function (window, document, $, undefined) {
       submitWithEnter = true
     } else {
       submitWithEnter = false
+    }
+  })
+
+  $('#wf-Company-Lead-Form').on('keydown', function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault()
     }
   })
 
@@ -325,6 +331,7 @@ window.$loaded(function (window, document, $, undefined) {
   })
 
   let skillList = []
+  $('.js-skills-search').attr('autocomplete', 'off')
   $('.js-skills-search').on('keyup', function (e) {
     let input = $(e.currentTarget)
     let inputValue = input.val()
@@ -348,7 +355,10 @@ window.$loaded(function (window, document, $, undefined) {
       $('.js-skills-results').remove()
       $.ajax({
         type: 'GET',
-        url: '/search/skills?term=' + inputValue + '',
+        url:
+          '/search/skills?term=' +
+          inputValue +
+          '',
         contentType: 'application/json',
         success: function (skills) {
           skillList = skills
