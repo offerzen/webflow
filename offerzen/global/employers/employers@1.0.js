@@ -64,14 +64,13 @@ window.$loaded(function (window, document, $, undefined) {
       const formProperties = Object.fromEntries(formData.entries())
       const role_types = getRoleTypes(formData, formProperties)
 
-      /*if (role_types.length < 1) {
-          $('.role-type-error-container').html(
-            '<ul class="parsley-errors-list filled js-missing-fields"><li class="parsley-required">This field is required</li></ul>'
-          )
-        } else {
-          $('.role-type-error-container').html('')
-        }*/
-      if (form.parsley().validate() /* && role_types.length > 0 */) {
+      if (formProperties.subscribe_to_company_newsletter === false) {
+        formProperties.subscribe_to_hiring_insights = false
+      } else {
+        formProperties.subscribe_to_hiring_insights = true
+      }
+
+      if (form.parsley().validate()) {
         $('.js-missing-fields').hide()
         tracking()
         $.ajax({
@@ -108,7 +107,7 @@ window.$loaded(function (window, document, $, undefined) {
   ;(function updateSubscribeToHiringInsightsField() {
     subscribeToCompanyNewsletter = $('#subscribe_to_company_newsletter')
     subscribeToCompanyNewsletter.on('change', function () {
-      document.getElementById('subscribe_to_hiring_insights').value = this.value
+      document.getElementById('subscribe_to_hiring_insights').value = this.value ? 'on' : 'off'
     })
   })()
 
@@ -167,13 +166,6 @@ window.$loaded(function (window, document, $, undefined) {
 
       form.find('input[name=workplace_policy]').val(role_types.join(','))
 
-      /*if (role_types.length < 1) {
-          $('.role-type-error-container').html(
-            '<ul class="parsley-errors-list filled js-missing-fields"><li class="parsley-required">This field is required</li></ul>'
-          )
-        } else {
-          $('.role-type-error-container').html('')
-        }*/
     }
   )
 
@@ -355,10 +347,7 @@ window.$loaded(function (window, document, $, undefined) {
       $('.js-skills-results').remove()
       $.ajax({
         type: 'GET',
-        url:
-          '/search/skills?term=' +
-          inputValue +
-          '',
+        url: '/search/skills?term=' + inputValue + '',
         contentType: 'application/json',
         success: function (skills) {
           skillList = skills
