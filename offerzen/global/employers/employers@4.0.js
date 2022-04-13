@@ -186,7 +186,6 @@ window.$loaded(function (window, document, $, undefined) {
 
   showFullListofTechRoles()
 
-
   // Skills fields
   function removeSkillItem(e) {
     $(e.currentTarget).parent().parent().remove()
