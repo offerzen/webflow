@@ -38,21 +38,11 @@
     document.cookie = cookieString;
   }
 
-  function cleanUtm() {
-    var cleanSearch = window.location.search
-      .replace(/utm_[^&]+&?/g, '')
-      .replace(/&$/, '')
-      .replace(/^\?$/, '');
-
-    window.history.replaceState({}, '', window.location.pathname + cleanSearch);
-  }
-
   window.addEventListener("load", function () {
     url = window.location.href;
     formattedUtmParams = formatUtmParameters(url);
     if (formattedUtmParams !== null) {
       trackUtm(formattedUtmParams);
-      cleanUtm()
     }
     setLandingPage();
   })

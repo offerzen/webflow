@@ -70,8 +70,8 @@ $loaded(function (window, document, $, undefined) {
     let formObject = $(e.currentTarget)
     grecaptcha.ready(function () {
       grecaptcha
-        .execute('6LdyT_MUAAAAAIodzZ8Ty-ZV-_1PGFmV2M70eMY-', {
-          action: 'community_activity_submission',
+        .execute('6Lf802weAAAAAHgxndx9NIZ3FTzdG3f7nBua2rRY', {
+          action: 'webflow',
         })
         .then(function (token) {
           const formData = new FormData(e.currentTarget)
