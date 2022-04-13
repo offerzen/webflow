@@ -1,5 +1,5 @@
 window.$loaded(function (window, document, $, undefined) {
-  ;(function () {
+  (function () {
     window.$parsleyLoaded = function (cb) {
       setTimeout(() => {
         if (window.Parsley && window.ParsleyValidator) {
@@ -45,7 +45,7 @@ window.$loaded(function (window, document, $, undefined) {
     })
   }
 
-  window.onSubmitCompanyLeadForm = function (token, e) {
+  function onSubmitCompanyLeadForm(token) {
     window.$parsleyLoaded(function (window, document, parsley) {
       const form = $('#wf-Company-Lead-Form')
       form.find('input[type=submit]').attr('disabled', true)
@@ -104,7 +104,8 @@ window.$loaded(function (window, document, $, undefined) {
       }
     })
   }
-  ;(function updateSubscribeToHiringInsightsField() {
+
+  (function updateSubscribeToHiringInsightsField() {
     subscribeToCompanyNewsletter = $('#subscribe_to_company_newsletter')
     subscribeToCompanyNewsletter.on('change', function () {
       document.getElementById('subscribe_to_hiring_insights').value = this.value ? 'on' : 'off'
@@ -184,10 +185,9 @@ window.$loaded(function (window, document, $, undefined) {
   }
 
   showFullListofTechRoles()
-})
 
-// Skills fields
-window.$loaded(function (window, document, $, undefined) {
+
+  // Skills fields
   function removeSkillItem(e) {
     $(e.currentTarget).parent().parent().remove()
   }
@@ -307,7 +307,7 @@ window.$loaded(function (window, document, $, undefined) {
               action: 'webflow',
             })
             .then(function (token) {
-              window.onSubmitCompanyLeadForm(token, e)
+              onSubmitCompanyLeadForm(token)
             })
         })
       } else {
