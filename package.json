@@ -1,0 +1,21 @@
+{
+  "name": "webflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/offerzen/webflow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/offerzen/webflow/issues"
+  },
+  "homepage": "https://github.com/offerzen/webflow#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.21.1"
+  }
+}
