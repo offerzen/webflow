@@ -1,15 +1,20 @@
 const { test, expect } = require('@playwright/test');
 
+// Used to intercept outgoing requests to the /company/form_leads endpoint, and mock successful responses
+const formLeadsRoute = page => page.route('https://www.offerzen.com/company/form_leads', route => {
+  route.fulfill({ status: 200 });
+});
+
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://offerzen.webflow.io/employers');
+  await page.goto('https://www.offerzen.com/employers');
+
+  await formLeadsRoute(page);
 });
 
 test.describe('ngrok', () => {
   test('should not contain as part of form submissions', async ({ page }) => {
     const formElement = page.locator('#wf-Company-Lead-Form');
     const formAction = await formElement.getAttribute('method');
-
-    console.log('form action: ', formAction)
 
     expect(formAction).not.toContain('ngrok.io')
   });
@@ -35,6 +40,6 @@ test.describe('form submissions', () => {
 
     const requestValues = Object.values(request.postDataJSON()).filter(val => typeof(val) !== 'object');
 
-    await expect(requestValues).toEqual(['Playwright Test', 'playwrighttest@offerzen.com', '0811111111', 'Playwright Test', '5-6 hires', '', 'on', 'on', 'sa_webflow', 'on', '+27', '+27811111111', 'https://offerzen.webflow.io/employers', 'company_signup', 'In-office', ''])
+    await expect(requestValues).toEqual(['Playwright Test', 'playwrighttest@offerzen.com', '0811111111', 'Playwright Test', '5-6 hires', '', 'on', 'on', 'sa_webflow', 'on', '+27', '+27811111111', 'https://www.offerzen.com/employers', 'company_signup', 'In-office', ''])
   });
 });
