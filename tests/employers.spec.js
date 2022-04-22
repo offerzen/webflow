@@ -36,7 +36,5 @@ test.describe('form submissions', () => {
     const requestValues = Object.values(request.postDataJSON()).filter(val => typeof(val) !== 'object');
 
     await expect(requestValues).toEqual(['Playwright Test', 'playwrighttest@offerzen.com', '0811111111', 'Playwright Test', '5-6 hires', '', 'on', 'on', 'sa_webflow', 'on', '+27', '+27811111111', 'https://offerzen.webflow.io/employers', 'company_signup', 'In-office', ''])
-
-    console.log('debug time');
   });
 });
