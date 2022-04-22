@@ -37,12 +37,18 @@ window.$loaded(function (window, document, $, undefined) {
     }
 
     function tracking() {
+      var event = $(".js-analytics-event").text();
+      var action = $(".js-analytics-action").text();
+      var label = $(".js-analytics-label").text();
+      var category = $(".js-analytics-category").text();
+      var source = $(".js-analytics-source").text();
+      
       dataLayer.push({
-        event: 'Company Lead Form Submitted ',
-        action: 'Lead Form Submitted',
-        label: 'Company Sign Up / Employer Landing Page',
-        category: 'Core',
-        source: 'Demand Sign Up',
+        event: event || 'Company Lead Form Submitted ',
+        action: action || 'Lead Form Submitted',
+        label: label || 'Company Sign Up / Employer Landing Page',
+        category: category || 'Core',
+        source: source || 'Demand Sign Up',
       })
     }
 
