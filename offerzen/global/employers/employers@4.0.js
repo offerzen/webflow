@@ -44,7 +44,7 @@ window.$loaded(function (window, document, $, undefined) {
       var source = $(".js-analytics-source").text();
       
       dataLayer.push({
-        event: event || 'Company Lead Form Submitted ',
+        event: event || 'Company Lead Form Submitted',
         action: action || 'Lead Form Submitted',
         label: label || 'Company Sign Up / Employer Landing Page',
         category: category || 'Core',
