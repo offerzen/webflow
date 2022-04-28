@@ -390,9 +390,7 @@ window.$loaded(function (window, document, $, undefined) {
         contentType: 'application/json',
         success: function (skills) {
           skillList = skills.sort(function(a, b){
-            if(a.text < b.text) { return -1; }
-            if(a.text > b.text) { return 1; }
-            return 0;
+            return a.text.localeCompare(b.text)
           })
           $('.js-skills-results').remove()
           addSkillsToResults(skills)
