@@ -362,6 +362,7 @@ window.$loaded(function (window, document, $, undefined) {
   })
 
   let skillList = []
+  $('.js-skills-search').attr('autocomplete', 'off')
   $('.js-skills-search').on('keyup', function (e) {
     let input = $(e.currentTarget)
     let inputValue = input.val()
@@ -388,9 +389,11 @@ window.$loaded(function (window, document, $, undefined) {
         url: '/search/skills?term=' + inputValue + '',
         contentType: 'application/json',
         success: function (skills) {
-          skillList = skills
+          skillList = skills.sort(function(a, b){
+            return a.text.localeCompare(b.text)
+          })
           $('.js-skills-results').remove()
-          addSkillsToResults(skills)
+          addSkillsToResults(skillList)
         },
       })
     }
