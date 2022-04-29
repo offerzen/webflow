@@ -393,7 +393,7 @@ window.$loaded(function (window, document, $, undefined) {
             return a.text.localeCompare(b.text)
           })
           $('.js-skills-results').remove()
-          addSkillsToResults(skills)
+          addSkillsToResults(skillList)
         },
       })
     }
