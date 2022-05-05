@@ -1,9 +1,7 @@
 $loaded(function (window, document, $, undefined) {
   function submitFormContent(formObject, formProperties, token, callback) {
-    let subscribe_to_company_newsletter = $('#subscribe_to_newsletter').val()
-    let formPayload = Object.assign({}, formProperties, {
-      'g-recaptcha-response-data': token,
-    })
+  
+    let formPayload = formProperties
 
     if ($('#subscribe_to_newsletter').is(':checked')) {
       formPayload = Object.assign({}, formPayload, {
@@ -27,6 +25,7 @@ $loaded(function (window, document, $, undefined) {
       label: form.data('label'),
       category: form.data('category'),
       referrer: location.href,
+      'g-recaptcha-response-data[webflow]': token,
     }
 
     $.each(form.serializeArray(), function (_, kv) {
