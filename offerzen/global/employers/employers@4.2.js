@@ -37,12 +37,18 @@ window.$loaded(function (window, document, $, undefined) {
     }
 
     function tracking() {
+      var event = $(".js-analytics-event").text();
+      var action = $(".js-analytics-action").text();
+      var label = $(".js-analytics-label").text();
+      var category = $(".js-analytics-category").text();
+      var source = $(".js-analytics-source").text();
+      
       dataLayer.push({
-        event: 'Company Lead Form Submitted ',
-        action: 'Lead Form Submitted',
-        label: 'Company Sign Up / Employer Landing Page',
-        category: 'Core',
-        source: 'Demand Sign Up',
+        event: event || 'Company Lead Form Submitted',
+        action: action || 'Lead Form Submitted',
+        label: label || 'Company Sign Up / Employer Landing Page',
+        category: category || 'Core',
+        source: source || 'Demand Sign Up',
       })
     }
 
@@ -356,6 +362,7 @@ window.$loaded(function (window, document, $, undefined) {
   })
 
   let skillList = []
+  $('.js-skills-search').attr('autocomplete', 'off')
   $('.js-skills-search').on('keyup', function (e) {
     let input = $(e.currentTarget)
     let inputValue = input.val()
@@ -382,9 +389,11 @@ window.$loaded(function (window, document, $, undefined) {
         url: '/search/skills?term=' + inputValue + '',
         contentType: 'application/json',
         success: function (skills) {
-          skillList = skills
+          skillList = skills.sort(function(a, b){
+            return a.text.localeCompare(b.text)
+          })
           $('.js-skills-results').remove()
-          addSkillsToResults(skills)
+          addSkillsToResults(skillList)
         },
       })
     }
