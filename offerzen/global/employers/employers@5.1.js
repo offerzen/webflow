@@ -343,7 +343,7 @@ window.$loaded(function () {
       $('.js-skills-search').focusout(function () {
         setTimeout(function () {
           $('.js-skills-results').remove()
-        }, 1)
+        }, 200)
       })
 
       let skillList = []
