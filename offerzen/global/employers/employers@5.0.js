@@ -70,7 +70,7 @@ window.$loaded(function () {
       const formProperties = Object.fromEntries(formData.entries())
       const roleTypes = getRoleTypes(formProperties)
 
-      if (form.parsley().validate() /* && role_types.length > 0 */) {
+      if (form.parsley().validate()) {
         $('.js-missing-fields').hide()
         trackSubmission();
         $.ajax({
@@ -95,6 +95,11 @@ window.$loaded(function () {
             if (data.user_id) {
               window.location.href = data.redirect_url
             }
+          },
+          // Reset form
+          error: function (data) {
+            form.find('input[type=submit]').attr('disabled', false)
+            form.find('input[type=submit]').attr('value', initialButtonValue)
           },
         })
       } else {
@@ -326,7 +331,7 @@ window.$loaded(function () {
                   action: 'webflow',
                 })
                 .then(function (token) {
-                  window.onSubmitCompanyLeadForm(token, e)
+                  onSubmitCompanyLeadForm(token, e)
                 })
             })
           } else {
@@ -338,7 +343,7 @@ window.$loaded(function () {
       $('.js-skills-search').focusout(function () {
         setTimeout(function () {
           $('.js-skills-results').remove()
-        }, 200)
+        }, 1)
       })
 
       let skillList = []
@@ -375,10 +380,15 @@ window.$loaded(function () {
               $('.js-skills-results').remove()
               addSkillsToResults(skillList)
             },
+            // TODO: error handling
           })
         }
       })
     }
+
+    // ------------------------------------------------------------
+    // Setup form
+    // ------------------------------------------------------------
 
     ; (function init() {
       //Check Recaptcha error
