@@ -117,7 +117,7 @@ window.$loaded(function () {
       })
     }
 
-    function addPhoneValidation() {
+    function addPhoneValidation(onPhoneFieldReady) {
       //Intl-tel-input
       let input = document.querySelector('#phone-number'),
         dialCode = document.querySelector('#dial_code'),
@@ -134,6 +134,7 @@ window.$loaded(function () {
         separateDialCode: true,
         dropdownContainer: document.getElementById('js-phone-dropdown'),
       })
+      iti.promise.then(onPhoneFieldReady)
 
       const updateContactPhoneValue = function (event) {
         dialCode.value = '+' + iti.getSelectedCountryData().dialCode;
@@ -433,19 +434,35 @@ window.$loaded(function () {
         }
       )
 
+      // Load testing
+      let isFormReady = false;
+      let isPhoneReady = false;
+
+      function onFormReady() {
+        if (!isPhoneReady || !isFormReady) return;
+
+        // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
+        const submitButton = $('#wf-Company-Lead-Form input[type=submit]');
+        submitButton.removeClass('loading');
+        submitButton.attr('disabled', false);
+      }
+
+      function onPhoneFieldReady() {
+        isPhoneReady = true;
+        onFormReady();
+      }
+
       updateSubscribeToHiringInsightsField();
-      addPhoneValidation();
+      addPhoneValidation(onPhoneFieldReady);
       showFullListofTechRoles();
       initSkillsField();
       matchCheckboxStates();
 
-      // TODO: Not sure if this is still needed for other parts of the page? Remove if not
+      // Still needed for other parts of the page
       window.onSubmitCompanyLeadForm = onSubmitCompanyLeadForm;
 
-      // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
-      const submitButton = $('#wf-Company-Lead-Form input[type=submit]');
-      submitButton.removeClass('loading');
-      submitButton.attr('disabled', false);
+      isFormReady = true;
+      onFormReady();
     })();
   });
 })
