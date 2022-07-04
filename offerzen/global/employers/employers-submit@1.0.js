@@ -4,7 +4,7 @@
   const label = button.value;
   button.value = 'Loading...';
 
-  $loaded(function () {
+  window.companyLeadFormLoaded = function () {
     button.value = label;
-  });
+  }
 })();

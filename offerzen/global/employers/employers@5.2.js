@@ -443,8 +443,8 @@ window.$loaded(function () {
 
         // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
         const submitButton = $('#wf-Company-Lead-Form input[type=submit]');
-        submitButton.removeClass('loading');
         submitButton.attr('disabled', false);
+        companyLeadFormLoaded();
       }
 
       function onPhoneFieldReady() {
