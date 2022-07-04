@@ -212,16 +212,34 @@ window.$loaded(function () {
       })
     }
 
+    function matchCheckboxStates() {
+      $('.w-checkbox').each(function () {
+        const el = $(this);
+        const inputField = el.find('.w-checkbox-input');
+        if (el.find('input[type=checkbox]').is(':checked')) {
+          inputField.addClass('w--redirected-checked');
+        }
+        else {
+          inputField.removeClass('w--redirected-checked');
+        }
+      });
+    }
+
     // ------------------------------------------------------------
     // Skills fields
     // ------------------------------------------------------------
 
     function initSkillsField() {
-      function removeSkillItem(e) {
+      let addedSkills = {};
+
+      function removeSkillItem(e, skillName) {
         $(e.currentTarget).parent().parent().remove()
+        delete addedSkills[skillName]
       }
 
       function addSkillToSelected(skill, e) {
+        if (skill.text in addedSkills) return;
+
         $('.js-skills-selected').show()
 
         let listItem = $(document.createElement('li')).addClass('list-item-skills')
@@ -234,7 +252,7 @@ window.$loaded(function () {
         let innerContainer = $(document.createElement('div')).addClass(
           'list-item-inner-container'
         )
-        innerContainer.on('click', removeSkillItem)
+        innerContainer.on('click', function (e) { removeSkillItem(e, skill.text) })
         let closeSpan = $(document.createElement('span')).addClass('close-span')
         let svg = $(
           "<svg class='close-button-svg' fill='#5EA5EE' width='1024' height='1024' viewBox='0 0 1024 1024' preserveAspectRatio='xMidYMid meet'><path d='M776.851 695.153c16.64 16.619 16.64 43.733 0 60.373-8.32 8.32-19.179 12.587-30.080 12.587-10.88 0-21.952-4.267-30.293-12.587l-193.707-193.707-193.92 193.707c-8.32 8.32-19.179 12.587-30.080 12.587-10.88 0-21.952-4.267-30.293-12.587-16.64-16.64-16.64-43.755 0-60.373l193.941-193.707-193.941-193.92c-16.64-16.64-16.64-43.733 0-60.373s43.733-16.64 60.373 0l193.92 193.92 193.707-193.92c16.64-16.64 43.733-16.64 60.373 0s16.64 43.733 0 60.373l-193.707 193.92 193.707 193.707z'></path></svg>"
@@ -246,6 +264,8 @@ window.$loaded(function () {
         itemContainer.append(innerContainer)
         listItem.append(itemContainer)
         $('.js-skills-selected').append(listItem)
+
+        addedSkills[skill.text] = true;
       }
 
       function addSkillsToResults(skills) {
@@ -306,6 +326,7 @@ window.$loaded(function () {
           $('.js-skills-results').remove()
           $('.js-skills-search').val('')
         })
+
         skillsResultsUl.append(skillsItem)
 
         $('.skills-top-container').prepend(skillsResultsUl)
@@ -416,9 +437,15 @@ window.$loaded(function () {
       addPhoneValidation();
       showFullListofTechRoles();
       initSkillsField();
+      matchCheckboxStates();
 
       // TODO: Not sure if this is still needed for other parts of the page? Remove if not
       window.onSubmitCompanyLeadForm = onSubmitCompanyLeadForm;
+
+      // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
+      const submitButton = $('#wf-Company-Lead-Form input[type=submit]');
+      submitButton.removeClass('loading');
+      submitButton.attr('disabled', false);
     })();
   });
 })
