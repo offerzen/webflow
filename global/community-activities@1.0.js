@@ -35,7 +35,7 @@
 
       // Extra fields which could be required per Webflow form
       var fields = ['company_name', 'job_title'];
-      var emailSubscriptions = ['subscribe_to_company_newsletter', 'subscribe_to_blog', 'subscribe_to_hiring_insights', 'subscribe_to_events', 'subscribe_to_job_opportunities'];
+      var email_subscriptions = ['subscribe_to_company_newsletter', 'subscribe_to_blog', 'subscribe_to_hiring_insights', 'subscribe_to_events', 'subscribe_to_job_opportunities'];
 
       var payload = {
         form_id: formId,
@@ -60,11 +60,11 @@
       }
 
       // Loop through email subscriptions and append them to the payload
-      for(i = 0; i < emailSubscriptions.length; i++) {
-        var emailSubscriptionCheckbox = document.querySelector("#" + emailSubscriptions[i]);
+      for(i = 0; i < email_subscriptions.length; i++) {
+        var email_subscription_checkbox = document.querySelector("#" + email_subscriptions[i]);
 
-        if (emailSubscriptionCheckbox && typeof emailSubscriptionCheckbox !== 'undefined') {
-          payload[emailSubscriptions[i]] = emailSubscriptionCheckbox.checked;
+        if (email_subscription_checkbox && typeof email_subscription_checkbox !== 'undefined') {
+          payload[email_subscriptions[i]] = email_subscription_checkbox.checked;
         }
       }
 
