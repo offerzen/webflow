@@ -1,6 +1,6 @@
 !function(){
   window.$loaded(function (window, document, $, undefined) {
-    var form = $(".events-form");
+    var form = $(".js-community-activity-form");
     const submitButton = form.find(":input[type='submit']");
     const originalButtonText = submitButton.val();
 
@@ -29,9 +29,7 @@
       var source_detail = submitButton.attr("data-source-detail");
 
       // Required form fields
-      var email = document.querySelector("#email").value;
-      var firstName = document.querySelector("#first_name").value;
-      var lastName = document.querySelector("#last_name").value;
+      var email = document.querySelector("input[name='email'],[data-input-name='email']").value;
 
       // Extra fields which could be required per Webflow form
       var fields = ['company_name', 'job_title'];
@@ -45,10 +43,19 @@
         label,
         source_detail,
         email,
-        first_name: firstName,
-        last_name: lastName,
         "g-recaptcha-response-data": { "webflow": token }
       };
+
+      // If first_name and last_name is present, append, otherwise default to name (full name) and append
+      var firstNameField = document.querySelector("input[name='first_name'],[data-input-name='first_name']");
+      var lastNameField = document.querySelector("input[name='last_name'],[data-input-name='last_name']");
+
+      if (firstNameField && lastNameField) {
+        payload['first_name'] = firstNameField.value;
+        payload['last_name'] = lastNameField.value;
+      } else {
+        payload['name'] = document.querySelector("input[name='name'],[data-input-name='name']").value;
+      }
 
       // Loop through optional fields and append them to the payload
       for(i = 0; i < fields.length; i++) {
@@ -73,13 +80,13 @@
         data: JSON.stringify(payload),
         contentType: 'application/json',
         type: 'POST',
-        url: '/api/growth/forms/community_activities',
+        url: 'https://8226-41-71-27-131.ngrok.io/api/growth/forms/community_activities',
         success: submissionSuccess,
         error: handleSubmissionFailure
       });
     }
 
-    $(document).on("click", submitButton[0], function(e) {
+    $(document).on("click", ":input[type='submit']", function(e) {
     	e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
