@@ -59,7 +59,7 @@
 
       // Loop through optional fields and append them to the payload
       for(i = 0; i < fields.length; i++) {
-        var textField = document.querySelector(`input[name='${fields[i]}']`);// document.querySelector("#" + fields[i]);
+        var textField = document.querySelector(`input[name='${fields[i]}'],[data-input-name='${fields[i]}']`);
 
         if (textField != null) {
           payload[fields[i]] = textField.value;
@@ -68,9 +68,9 @@
 
       // Loop through email subscriptions and append them to the payload
       for(i = 0; i < email_subscriptions.length; i++) {
-        var email_subscription_checkbox = document.querySelector("#" + email_subscriptions[i]);
+        var email_subscription_checkbox = document.querySelector(`input[name='${email_subscriptions[i]}'],[data-input-name='${email_subscriptions[i]}']`);
 
-        if (email_subscription_checkbox && typeof email_subscription_checkbox !== 'undefined') {
+        if (textField != null) {
           payload[email_subscriptions[i]] = email_subscription_checkbox.checked;
         }
       }
