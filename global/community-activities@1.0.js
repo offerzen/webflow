@@ -80,7 +80,7 @@
         data: JSON.stringify(payload),
         contentType: 'application/json',
         type: 'POST',
-        url: 'https://8226-41-71-27-131.ngrok.io/api/growth/forms/community_activities',
+        url: '/api/growth/forms/community_activities',
         success: submissionSuccess,
         error: handleSubmissionFailure
       });
