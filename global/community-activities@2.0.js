@@ -70,7 +70,7 @@
       for(i = 0; i < email_subscriptions.length; i++) {
         var email_subscription_checkbox = document.querySelector(`input[name='${email_subscriptions[i]}'],[data-input-name='${email_subscriptions[i]}']`);
 
-        if (textField != null) {
+        if (email_subscription_checkbox != null) {
           payload[email_subscriptions[i]] = email_subscription_checkbox.checked;
         }
       }
