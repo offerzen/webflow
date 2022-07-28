@@ -9,21 +9,6 @@ window.$loaded(function () {
     }, 50);
   };
   window.$parsleyLoaded(function (window, document, parsley) {
-    function trackSubmission() {
-      var event = $('.js-analytics-event').text();
-      var action = $('.js-analytics-action').text();
-      var label = $('.js-analytics-label').text();
-      var category = $('.js-analytics-category').text();
-      var source = $('.js-analytics-source').text();
-      // dataLayer.push({
-      //   event: event || 'Company Prospect Form Submitted',
-      //   action: action || 'Prospect Form Submitted',
-      //   label: label || 'Company Sign Up / Employer Landing Page',
-      //   category: category || 'Core',
-      //   source: source || 'Demand Sign Up',
-      // });
-    }
-
     function loadFormStep() {
       if ('emailValue' in localStorage) {
         // Showing correct step
@@ -69,13 +54,13 @@ window.$loaded(function () {
       const formProperties = Object.fromEntries(formData.entries());
       if (form.parsley().validate()) {
         $('.js-missing-fields').hide();
-        trackSubmission();
         $.ajax({
           type: 'POST',
           url: '/company/form_prospects',
           data: JSON.stringify(
             Object.assign({}, formProperties, {
               referrer: location.href,
+              lead_form_type: $('.js-label-analytics').text(),
               report_source: searchParams.get('report_source'),
               'g-recaptcha-response-data': {
                 webflow: token,
