@@ -10,6 +10,7 @@ window.$loaded(function () {
   };
 
   window.$parsleyLoaded(function (window, document, parsley) {
+    const multiStepLeadForm = $('#Multi-Step-Company-Lead-Form');
     function getRoleTypes(formProperties) {
       let fields = [
         'role_type[In-office]',
@@ -17,7 +18,7 @@ window.$loaded(function () {
         'role_type[Hybrid]',
       ];
       let roleTypes = [];
-      $('.js-val-msg-roles').hide();
+      multiStepLeadForm.find('.js-val-msg-roles').hide();
 
       for (let key in formProperties) {
         if (fields.includes(key) && formProperties[key] === 'on') {
@@ -32,18 +33,18 @@ window.$loaded(function () {
         }
       }
       if (roleTypes.length < 1) {
-        $('.js-val-msg-roles').show();
+        multiStepLeadForm.find('.js-val-msg-roles').show();
       }
 
       return roleTypes;
     }
 
     function trackSubmission() {
-      var event = $('.js-analytics-event').text();
-      var action = $('.js-analytics-action').text();
-      var label = $('.js-analytics-label').text();
-      var category = $('.js-analytics-category').text();
-      var source = $('.js-analytics-source').text();
+      var event = multiStepLeadForm.find('.js-analytics-event').text();
+      var action = multiStepLeadForm.find('.js-analytics-action').text();
+      var label = multiStepLeadForm.find('.js-analytics-label').text();
+      var category = multiStepLeadForm.find('.js-analytics-category').text();
+      var source = multiStepLeadForm.find('.js-analytics-source').text();
 
       dataLayer.push({
         event: event || 'Company Lead Form Submitted',
@@ -54,20 +55,23 @@ window.$loaded(function () {
       });
     }
 
-    function onSubmitCompanyLeadForm(token, e) {
-      const form = $('#wf-Company-Lead-Form-Multi-Step');
-      form.find('input[type=submit]').attr('disabled', true);
-      let initialButtonValue = form.find('input[type=submit]').attr('value');
-      let dataWait = form.find('input[type=submit]').attr('data-wait');
-      form.find('input[type=submit]').attr('value', dataWait);
+    function onSubmitMultiStepCompanyLeadForm(token, e) {
+      multiStepLeadForm.find('input[type=submit]').attr('disabled', true);
+      let initialButtonValue = multiStepLeadForm
+        .find('input[type=submit]')
+        .attr('value');
+      let dataWait = multiStepLeadForm
+        .find('input[type=submit]')
+        .attr('data-wait');
+      multiStepLeadForm.find('input[type=submit]').attr('value', dataWait);
       // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
       let searchParams = new URLSearchParams(window.location.search);
-      const formData = new FormData(form[0]);
+      const formData = new FormData(multiStepLeadForm[0]);
       const formProperties = Object.fromEntries(formData.entries());
       const roleTypes = getRoleTypes(formProperties);
 
-      if (form.parsley().validate()) {
-        $('.js-missing-fields').hide();
+      if (multiStepLeadForm.parsley().validate()) {
+        multiStepLeadForm.find('.js-missing-fields').hide();
         trackSubmission();
         $.ajax({
           type: 'POST',
@@ -94,30 +98,37 @@ window.$loaded(function () {
           },
           // Reset form
           error: function (data) {
-            form.find('input[type=submit]').attr('disabled', false);
-            form.find('input[type=submit]').attr('value', initialButtonValue);
+            multiStepLeadForm
+              .find('input[type=submit]')
+              .attr('disabled', false);
+            multiStepLeadForm
+              .find('input[type=submit]')
+              .attr('value', initialButtonValue);
           },
         });
       } else {
-        $('.js-missing-fields').show();
-        form.find('input[type=submit]').attr('disabled', false);
-        form.find('input[type=submit]').attr('value', initialButtonValue);
+        multiStepLeadForm.find('.js-missing-fields').show();
+        multiStepLeadForm.find('input[type=submit]').attr('disabled', false);
+        multiStepLeadForm
+          .find('input[type=submit]')
+          .attr('value', initialButtonValue);
       }
     }
 
     function updateSubscribeToHiringInsightsField() {
-      subscribeToCompanyNewsletter = $('#subscribe_to_company_newsletter');
+      subscribeToCompanyNewsletter = multiStepLeadForm.find(
+        '#subscribe_to_company_newsletter'
+      );
       subscribeToCompanyNewsletter.on('change', function () {
-        document.getElementById('subscribe_to_hiring_insights').value =
-          this.value;
+        multiStepLeadForm.find('#subscribe_to_hiring_insights').val(this.value);
       });
     }
 
     function addPhoneValidation(onPhoneFieldReady) {
       //Intl-tel-input
-      let input = document.querySelector('.js-phone-number-multi-step'),
-        dialCode = document.querySelector('#form-2 #dial_code'),
-        contact_phone = document.querySelector('#form-2 #contact_phone');
+      let input = multiStepLeadForm.find('.js-phone-number-multi-step')[0],
+        dialCode = multiStepLeadForm.find('#dial_code')[0],
+        contact_phone = multiStepLeadForm.find('#contact_phone')[0];
 
       let canValidate = false;
 
@@ -128,9 +139,9 @@ window.$loaded(function () {
         preferredCountries: ['za', 'nl', 'de'],
         autoHideDialCode: false,
         separateDialCode: true,
-        dropdownContainer: document.querySelector(
-          '.js-phone-dropdown-multi-step-form'
-        ),
+        dropdownContainer: multiStepLeadForm.find(
+          '#js-phone-dropdown-multi-step-form'
+        )[0],
       });
       iti.promise.then(onPhoneFieldReady);
 
@@ -188,6 +199,7 @@ window.$loaded(function () {
       });
     }
 
+    //This is not part of the form
     function showFullListofTechRoles() {
       showMoreLink = $('.js-show-more');
       faidingList = $('.fading-list');
@@ -222,21 +234,22 @@ window.$loaded(function () {
       //Check Recaptcha error
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('r')) {
-        $('.recaptcha-error').show();
+        multiStepLeadForm.find('.recaptcha-error').show();
       }
 
       $('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox').on(
         'change',
         function (e) {
-          let form = $('#wf-Company-Lead-Form-Multi-Step');
-          const formData = new FormData(form[0]);
+          const formData = new FormData(multiStepLeadForm[0]);
           const formProperties = Object.fromEntries(formData.entries());
 
           formProperties[e.target.name] = e.target.checked ? 'on' : 'off';
 
           const role_types = getRoleTypes(formProperties);
 
-          form.find('input[name=workplace_policy]').val(role_types.join(','));
+          multiStepLeadForm
+            .find('input[name=workplace_policy]')
+            .val(role_types.join(','));
         }
       );
 
@@ -248,12 +261,10 @@ window.$loaded(function () {
         if (!isPhoneReady || !isFormReady) return;
 
         // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
-        const submitButton = $(
-          '#wf-Company-Lead-Form-Multi-Step input[type=submit]'
-        );
+        const submitButton = multiStepLeadForm.find('input[type=submit]');
         submitButton.attr('disabled', false);
 
-        $('#wf-Company-Lead-Form-Multi-Step').on('submit', function (e) {
+        multiStepLeadForm.on('submit', function (e) {
           e.preventDefault();
           grecaptcha.ready(function () {
             grecaptcha
@@ -261,11 +272,11 @@ window.$loaded(function () {
                 action: 'webflow',
               })
               .then(function (token) {
-                onSubmitCompanyLeadForm(token, e);
+                onSubmitMultiStepCompanyLeadForm(token, e);
               });
           });
         });
-        companyMultiStepFormLoaded();
+        multiStepCompanyLeadFormLoaded();
       }
 
       function onPhoneFieldReady() {
@@ -279,7 +290,7 @@ window.$loaded(function () {
       matchCheckboxStates();
 
       // Still needed for other parts of the page
-      window.onSubmitCompanyLeadForm = onSubmitCompanyLeadForm;
+      window.onSubmitMultiStepCompanyLeadForm = onSubmitMultiStepCompanyLeadForm;
 
       isFormReady = true;
       onFormReady();
