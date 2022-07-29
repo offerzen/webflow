@@ -219,7 +219,7 @@ window.$loaded(function () {
     }
 
     function matchCheckboxStates() {
-      $('.w-checkbox').each(function () {
+      originalLeadForm.find('.w-checkbox').each(function () {
         const el = $(this);
         const inputField = el.find('.w-checkbox-input');
         if (el.find('input[type=checkbox]').is(':checked')) {
