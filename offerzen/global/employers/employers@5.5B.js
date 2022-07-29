@@ -237,9 +237,9 @@ window.$loaded(function () {
         multiStepLeadForm.find('.recaptcha-error').show();
       }
 
-      $('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox').on(
-        'change',
-        function (e) {
+      multiStepLeadForm
+        .find('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox')
+        .on('change', function (e) {
           const formData = new FormData(multiStepLeadForm[0]);
           const formProperties = Object.fromEntries(formData.entries());
 
@@ -250,8 +250,7 @@ window.$loaded(function () {
           multiStepLeadForm
             .find('input[name=workplace_policy]')
             .val(role_types.join(','));
-        }
-      );
+        });
 
       // Load testing
       let isFormReady = false;
@@ -290,7 +289,8 @@ window.$loaded(function () {
       matchCheckboxStates();
 
       // Still needed for other parts of the page
-      window.onSubmitMultiStepCompanyLeadForm = onSubmitMultiStepCompanyLeadForm;
+      window.onSubmitMultiStepCompanyLeadForm =
+        onSubmitMultiStepCompanyLeadForm;
 
       isFormReady = true;
       onFormReady();

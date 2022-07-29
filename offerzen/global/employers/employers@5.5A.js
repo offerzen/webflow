@@ -241,9 +241,9 @@ window.$loaded(function () {
         originalLeadForm.find('.recaptcha-error').show();
       }
 
-      $('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox').on(
-        'change',
-        function (e) {
+      originalLeadForm
+        .find('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox')
+        .on('change', function (e) {
           const formData = new FormData(form[0]);
           const formProperties = Object.fromEntries(formData.entries());
 
@@ -254,8 +254,7 @@ window.$loaded(function () {
           originalLeadForm
             .find('input[name=workplace_policy]')
             .val(role_types.join(','));
-        }
-      );
+        });
 
       // Load testing
       let isFormReady = false;
