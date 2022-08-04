@@ -1,7 +1,7 @@
 !(function () {
   window.$loaded(function (window, document, $, undefined) {
     const params = new URLSearchParams(window.location.search);
-    $('js-member-alert-message').val('');
+    $('.js-member-alert-message').val('');
 
     if (params.has('member')) {
       const alert = params.get('member');
