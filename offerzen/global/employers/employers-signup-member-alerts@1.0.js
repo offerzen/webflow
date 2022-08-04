@@ -8,15 +8,11 @@
       //show the relevant message based on alert
       switch (alert) {
         case 'invalid_token':
-          $('.js-member-alert-message').text(
-            'This invite has been used already.'
-          );
+          $('.js-member-alert-message').text('This invite has been used already.');
           $('.js-member-alert').show();
           break;
         case 'already_exists':
-          $('.js-member-alert-message').text(
-            "You've already been added as a member."
-          );
+          $('.js-member-alert-message').text("You've already been added as a member.");
           $('.js-member-alert').show();
           break;
         default:
