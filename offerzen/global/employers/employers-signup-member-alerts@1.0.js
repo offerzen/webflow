@@ -20,10 +20,9 @@
       }
 
       //clean url
-      searchParams.delete('member');
       const url = new URL(window.location);
-      url.searchParams = searchParams;
-      window.history.replaceState({}, '', url.pathname + url.search); // includes `?`
+      url.searchParam.delete('member');
+      window.history.replaceState(null, null, url);
     }
 
     //handle close alert icon
