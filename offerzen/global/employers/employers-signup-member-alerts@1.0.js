@@ -21,7 +21,7 @@
 
       //clean url
       const url = new URL(window.location);
-      url.searchParam.delete('member');
+      url.searchParams.delete('member');
       window.history.replaceState(null, null, url);
     }
 
