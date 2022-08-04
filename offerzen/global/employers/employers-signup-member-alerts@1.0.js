@@ -1,12 +1,12 @@
 !(function () {
   window.$loaded(function (window, document, $, undefined) {
-    const params = new URLSearchParams(window.location.search);
+    const searchParams = new URLSearchParams(window.location.search);
     $('.js-member-alert-message').val('');
 
-    if (params.has('member')) {
-      const alert = params.get('member');
+    if (searchParams.has('member')) {
+      const memberAlert = searchParams.get('member');
       //show the relevant message based on alert
-      switch (alert) {
+      switch (memberAlert) {
         case 'invalid_token':
           $('.js-member-alert-message').text('This invite has been used already.');
           $('.js-member-alert').show();
@@ -20,16 +20,10 @@
       }
 
       //clean url
-      var cleanSearch = window.location.search
-        .replace(/member[^&]+&?/g, '')
-        .replace(/&$/, '')
-        .replace(/^\?$/, '');
-
-      window.history.replaceState(
-        {},
-        '',
-        window.location.pathname + cleanSearch
-      );
+      searchParams.delete('member');
+      const url = new URL(window.location);
+      url.searchParams = searchParams;
+      window.history.replaceState({}, '', url.pathname + url.search); // includes `?`
     }
 
     //handle close alert icon
