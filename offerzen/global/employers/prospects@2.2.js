@@ -9,6 +9,25 @@ window.$loaded(function () {
     }, 50);
   };
   window.$parsleyLoaded(function (window, document, parsley) {
+    function retrieveProspectJourney() {
+      if ('emailValue' in localStorage && 'acceptedTerms' in localStorage) {
+        // Redirect to book a call
+        window.location.href = '/employers/book-a-call';
+      }
+    }
+
+    function storeEmailAndTermsOfServiceValues() {
+      // Store email
+      localStorage.setItem('emailValue', emailValue);
+
+      // Store terms of service
+      if ($('#accepted_terms_of_service').is(':checked')) {
+        localStorage.setItem('acceptedTerms', 'on');
+      } else {
+        localStorage.setItem('acceptedTerms', 'off');
+      }
+    }
+
     function onSubmitSingleStepProspectForm(token, e) {
       const singleStepProspectForm = $('#Company-Lead-Form-Email-Only');
       singleStepProspectForm.find('input[type=submit]').attr('disabled', true);
@@ -47,6 +66,9 @@ window.$loaded(function () {
           },
           success: function (data) {
             if (data.user_id) {
+              // Store email and accepted T&Cs
+              storeEmailAndTermsOfServiceValues();
+
               // Redirect to book a call
               window.location.href = '/employers/book-a-call';
             }
@@ -115,6 +137,7 @@ window.$loaded(function () {
         });
       }
 
+      retrieveProspectJourney();
       matchCheckboxStates();
       // Still needed for other parts of the page
       window.onSubmitSingleStepProspectForm = onSubmitSingleStepProspectForm;
