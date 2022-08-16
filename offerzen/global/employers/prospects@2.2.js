@@ -8,50 +8,44 @@ window.$loaded(function () {
       $parsleyLoaded(cb);
     }, 50);
   };
+
   window.$parsleyLoaded(function (window, document, parsley) {
+    const emailOnlyProspectForm = $('#Company-Lead-Form-Email-Only');
+
     function retrieveProspectJourney() {
-      if ('emailValue' in localStorage && 'acceptedTerms' in localStorage) {
+      if ('emailValueC' in localStorage) {
         // Redirect to book a call
         window.location.href = '/employers/book-a-call';
       }
     }
 
-    function storeEmailAndTermsOfServiceValues() {
+    function storeEmailValuePreBookCall() {
       // Store email
-      localStorage.setItem('emailValue', emailValue);
-
-      // Store terms of service
-      if ($('#accepted_terms_of_service').is(':checked')) {
-        localStorage.setItem('acceptedTerms', 'on');
-      } else {
-        localStorage.setItem('acceptedTerms', 'off');
-      }
+      let emailValue = emailOnlyProspectForm.find('#contact_email').val();
+      localStorage.setItem('emailValueC', emailValue);
     }
 
-    function onSubmitSingleStepProspectForm(token, e) {
-      const singleStepProspectForm = $('#Company-Lead-Form-Email-Only');
-      singleStepProspectForm.find('input[type=submit]').attr('disabled', true);
-      let initialButtonValue = singleStepProspectForm
-        .find('input[type=submit]')
-        .attr('value');
-      let dataWait = singleStepProspectForm
-        .find('input[type=submit]')
-        .attr('data-wait');
-      singleStepProspectForm.find('input[type=submit]').attr('value', dataWait);
+    function onSubmitEmailOnlyProspectForm(token, e) {
+      const formSubmitButton = emailOnlyProspectForm.find('input[type=submit]');
+      formSubmitButton.attr('disabled', true);
+
+      let initialButtonValue = formSubmitButton.attr('value');
+      let dataWait = formSubmitButton.attr('data-wait');
+      formSubmitButton.attr('value', dataWait);
 
       // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
       let searchParams = new URLSearchParams(window.location.search);
-      const formData = new FormData(singleStepProspectForm[0]);
+      const formData = new FormData(emailOnlyProspectForm[0]);
       const formProperties = Object.fromEntries(formData.entries());
-      if (singleStepProspectForm.parsley().validate()) {
-        singleStepProspectForm.find('.js-missing-fields').hide();
+      if (emailOnlyProspectForm.parsley().validate()) {
+        emailOnlyProspectForm.find('.js-missing-fields').hide();
         $.ajax({
           type: 'POST',
           url: '/company/form_prospects',
           data: JSON.stringify(
             Object.assign({}, formProperties, {
               referrer: location.href,
-              lead_form_type: singleStepProspectForm
+              lead_form_type: emailOnlyProspectForm
                 .find('.js-label-analytics')
                 .text(),
               report_source: searchParams.get('report_source'),
@@ -66,8 +60,8 @@ window.$loaded(function () {
           },
           success: function (data) {
             if (data.user_id) {
-              // Store email and accepted T&Cs
-              storeEmailAndTermsOfServiceValues();
+              // Store email
+              storeEmailValuePreBookCall();
 
               // Redirect to book a call
               window.location.href = '/employers/book-a-call';
@@ -75,27 +69,19 @@ window.$loaded(function () {
           },
           // Reset form
           error: function (data) {
-            singleStepProspectForm
-              .find('input[type=submit]')
-              .attr('disabled', false);
-            singleStepProspectForm
-              .find('input[type=submit]')
-              .attr('value', initialButtonValue);
+            formSubmitButton.attr('disabled', false);
+            formSubmitButton.attr('value', initialButtonValue);
           },
         });
       } else {
-        singleStepProspectForm.find('.js-missing-fields').show();
-        singleStepProspectForm
-          .find('input[type=submit]')
-          .attr('disabled', false);
-        singleStepProspectForm
-          .find('input[type=submit]')
-          .attr('value', initialButtonValue);
+        emailOnlyProspectForm.find('.js-missing-fields').show();
+        formSubmitButton.attr('disabled', false);
+        formSubmitButton.attr('value', initialButtonValue);
       }
     }
 
     function matchCheckboxStates() {
-      singleStepProspectForm.find('.w-checkbox').each(function () {
+      emailOnlyProspectForm.find('.w-checkbox').each(function () {
         const el = $(this);
         const inputField = el.find('.w-checkbox-input');
         if (el.find('input[type=checkbox]').is(':checked')) {
@@ -121,7 +107,7 @@ window.$loaded(function () {
       function onFormReady() {
         if (!isFormReady) return;
         // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
-        const submitButton = singleStepProspectForm.find('#continue-button');
+        const submitButton = emailOnlyProspectForm.find('#continue-button');
         submitButton.attr('disabled', false);
         submitButton.on('click', function (e) {
           e.preventDefault();
@@ -131,7 +117,7 @@ window.$loaded(function () {
                 action: 'webflow',
               })
               .then(function (token) {
-                onSubmitSingleStepProspectForm(token, e);
+                onSubmitEmailOnlyProspectForm(token, e);
               });
           });
         });
@@ -140,7 +126,7 @@ window.$loaded(function () {
       retrieveProspectJourney();
       matchCheckboxStates();
       // Still needed for other parts of the page
-      window.onSubmitSingleStepProspectForm = onSubmitSingleStepProspectForm;
+      window.onSubmitEmailOnlyProspectForm = onSubmitEmailOnlyProspectForm;
       isFormReady = true;
       onFormReady();
     })();

@@ -8,49 +8,38 @@ window.$loaded(function () {
       $parsleyLoaded(cb);
     }, 50);
   };
+
   window.$parsleyLoaded(function (window, document, parsley) {
     function loadFormStep() {
-      if ('emailValue' in localStorage) {
-        // Showing correct step
-        $('#form-2').show();
-        $('#form-1').hide();
+      if (!'emailValueC' in localStorage) {
+        if ('emailValueB' in localStorage) {
+          // Showing correct step
+          $('#form-2').show();
+          $('#form-1').hide();
 
-        // Setting email value
-        $('#form-2 #contact_email').val(localStorage.getItem('emailValue'));
-
-        // Set value of accepted terms
-        $('.second-form-terms-of-service').val(
-          localStorage.getItem('acceptedTerms')
-        );
-      } else {
-        $('#form-1').show();
-        $('#form-2').hide();
+          // Setting email value
+          $('#form-2 #contact_email').val(localStorage.getItem('emailValueB'));
+        } else {
+          $('#form-1').show();
+          $('#form-2').hide();
+        }
       }
     }
 
-    function storeEmailAndTermsOfServiceValues() {
+    function storeEmailValuePreLead() {
       // Store email
       let emailValue = $('#form-1 #contact_email').val();
-      localStorage.setItem('emailValue', emailValue);
-
-      // Store terms of service
-      if ($('#accepted_terms_of_service').is(':checked')) {
-        localStorage.setItem('acceptedTerms', 'on');
-      } else {
-        localStorage.setItem('acceptedTerms', 'off');
-      }
+      localStorage.setItem('emailValueB', emailValue);
     }
 
     function onSubmitMultiStepProspectForm(token, e) {
       const multiStepProspectForm = $('#wf-Company-Prospect-Form');
-      multiStepProspectForm.find('input[type=submit]').attr('disabled', true);
-      let initialButtonValue = multiStepProspectForm
-        .find('input[type=submit]')
-        .attr('value');
-      let dataWait = multiStepProspectForm
-        .find('input[type=submit]')
-        .attr('data-wait');
-      multiStepProspectForm.find('input[type=submit]').attr('value', dataWait);
+      const multiStepProspectButton =
+        multiStepProspectForm.find('input[type=submit]');
+      multiStepProspectButton.attr('disabled', true);
+      let initialButtonValue = multiStepProspectButton.attr('value');
+      let dataWait = multiStepProspectButton.attr('data-wait');
+      multiStepProspectButton.attr('value', dataWait);
 
       // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
       let searchParams = new URLSearchParams(window.location.search);
@@ -83,41 +72,27 @@ window.$loaded(function () {
               $('#form-2').show();
               $('#form-1').hide();
 
-              // Store email and accepted T&Cs
-              storeEmailAndTermsOfServiceValues();
+              // Store email
+              storeEmailValuePreLead();
 
               // Set email on next step
-              if ('emailValue' in localStorage) {
+              if ('emailValueB' in localStorage) {
                 $('#form-2 #contact_email').val(
-                  localStorage.getItem('emailValue')
-                );
-              }
-
-              if (localStorage.getItem('acceptedTerms') === 'on') {
-                $('.second-form-terms-of-service').val(
-                  localStorage.getItem('acceptedTerms')
+                  localStorage.getItem('emailValueB')
                 );
               }
             }
           },
           // Reset form
           error: function (data) {
-            multiStepProspectForm
-              .find('input[type=submit]')
-              .attr('disabled', false);
-            multiStepProspectForm
-              .find('input[type=submit]')
-              .attr('value', initialButtonValue);
+            multiStepProspectButton.attr('disabled', false);
+            multiStepProspectButton.attr('value', initialButtonValue);
           },
         });
       } else {
         multiStepProspectForm.find('.js-missing-fields').show();
-        multiStepProspectForm
-          .find('input[type=submit]')
-          .attr('disabled', false);
-        multiStepProspectForm
-          .find('input[type=submit]')
-          .attr('value', initialButtonValue);
+        multiStepProspectButton.attr('disabled', false);
+        multiStepProspectButton.attr('value', initialButtonValue);
       }
     }
 

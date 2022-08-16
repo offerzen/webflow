@@ -4,10 +4,8 @@
       const searchParams = new URLSearchParams(window.location.search);
 
       function checkParam(paramKey) {
-        if (searchParams.has(paramKey)) {
-          const paramValue = searchParams.get(paramKey);
-          return paramValue !== 'undefined';
-        }
+        const paramValue = searchParams.get(paramKey);
+        return paramValue !== null && paramValue !== 'undefined';
       }
 
       function cleanSuccessUrl() {
@@ -21,15 +19,14 @@
 
       function trackBookACall() {
         // checking if HubSpot params are valid
-        if (checkParam('__hssc') && checkParam('__hstc') &&checkParam('__hsfp')) {
-          var name = 'Lead: Booked a call';
-          var category = 'marketing pages';
-          var action = 'page load after booking a call';
+        if (checkParam('__hssc') && checkParam('__hstc') && checkParam('__hsfp')) {
+          var name = 'Company: Call Booked';
+          var category = 'Core';
+          var action = 'demo call booked';
           var source = 'demand landing page';
-          var label = 'booked a call success page';
-          var source_detail = 'success page';
+          var label = 'call booking success page';
   
-          var properties = { category, action, source, label, source_detail };
+          var properties = { category, action, source, label };
           analytics.track(name, properties, {
             integrations: { Intercom: false },
           });
