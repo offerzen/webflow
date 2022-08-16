@@ -10,6 +10,8 @@ window.$loaded(function () {
   };
 
   window.$parsleyLoaded(function (window, document, parsley) {
+    const multiStepProspectForm = $('#wf-Company-Prospect-Form');
+    const multiStepProspectButton = multiStepProspectForm.find('input[type=submit]');
     function loadFormStep() {
       if (!'emailValueC' in localStorage) {
         if ('emailValueB' in localStorage) {
@@ -33,9 +35,6 @@ window.$loaded(function () {
     }
 
     function onSubmitMultiStepProspectForm(token, e) {
-      const multiStepProspectForm = $('#wf-Company-Prospect-Form');
-      const multiStepProspectButton =
-        multiStepProspectForm.find('input[type=submit]');
       multiStepProspectButton.attr('disabled', true);
       let initialButtonValue = multiStepProspectButton.attr('value');
       let dataWait = multiStepProspectButton.attr('data-wait');
