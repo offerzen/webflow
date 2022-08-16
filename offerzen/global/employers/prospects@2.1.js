@@ -14,7 +14,7 @@ window.$loaded(function () {
     const multiStepProspectButton = multiStepProspectForm.find('input[type=submit]');
     function loadFormStep() {
       //emailValueC represents variant C lead journey
-      if (!'emailValueC' in localStorage) {
+      if (!('emailValueC' in localStorage)) {
       //emailValueB represents variant B lead journey
         if ('emailValueB' in localStorage) {
           // Showing correct step
