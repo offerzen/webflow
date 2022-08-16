@@ -13,6 +13,7 @@ window.$loaded(function () {
     const emailOnlyProspectForm = $('#Company-Lead-Form-Email-Only');
 
     function retrieveProspectJourney() {
+      //emailValueC represents variant C lead journey
       if ('emailValueC' in localStorage) {
         // Redirect to book a call
         window.location.href = '/employers/book-a-call';

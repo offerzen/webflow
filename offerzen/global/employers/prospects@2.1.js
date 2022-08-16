@@ -13,7 +13,9 @@ window.$loaded(function () {
     const multiStepProspectForm = $('#wf-Company-Prospect-Form');
     const multiStepProspectButton = multiStepProspectForm.find('input[type=submit]');
     function loadFormStep() {
+      //emailValueC represents variant C lead journey
       if (!'emailValueC' in localStorage) {
+      //emailValueB represents variant B lead journey
         if ('emailValueB' in localStorage) {
           // Showing correct step
           $('#form-2').show();
