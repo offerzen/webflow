@@ -71,11 +71,11 @@
         req.send(null);
 
         var properties = {
-          City: req.getResponseHeader('x-geoip-city'),
-          Country_code: req.getResponseHeader('x-geoip-country'),
-          Country: req.getResponseHeader('x-geoip-country-name'),
-          Latitude: req.getResponseHeader('x-geoip-latitude'),
-          Longitude: req.getResponseHeader('x-geoip-longitude'),
+          city: req.getResponseHeader('x-geoip-city'),
+          country_code: req.getResponseHeader('x-geoip-country'),
+          country: req.getResponseHeader('x-geoip-country-name'),
+          latitude: req.getResponseHeader('x-geoip-latitude'),
+          longitude: req.getResponseHeader('x-geoip-longitude'),
         };
         // end of Custom code
 
