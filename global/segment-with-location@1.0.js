@@ -63,7 +63,9 @@
         ['page'].map(function (name) {
           analytics[name] = x(name);
         });
-        // Location
+
+        // Custom code
+        // Get and Set Location Details for Page Load event
         var req = new XMLHttpRequest();
         req.open('GET', document.location, false);
         req.send(null);
@@ -72,25 +74,10 @@
           City: req.getResponseHeader('x-geoip-city'),
           Country_code: req.getResponseHeader('x-geoip-country'),
           Country: req.getResponseHeader('x-geoip-country-name'),
+          Latitude: req.getResponseHeader('x-geoip-latitude'),
+          Longitude: req.getResponseHeader('x-geoip-longitude'),
         };
-
-        function successGetCoordCallback(position) {
-          const coordinates = position.coords;
-          properties = {
-            ...properties,
-            Latitude: coordinates.latitude,
-            Longitude: coordinates.longitude,
-          };
-        }
-
-        function errorGetCoordCallback(err) {
-          console.warn(`ERROR(${err.code}): ${err.message}`);
-        }
-
-        navigator.geolocation.getCurrentPosition(
-          successGetCoordCallback,
-          errorGetCoordCallback
-        );
+        // end of Custom code
 
         // Load analytics if possible
         analytics.load = function (key, e) {
