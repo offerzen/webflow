@@ -83,13 +83,19 @@
 
         // Custom code
         // Get and Set Location Details for Page Load event
-        var req = new XMLHttpRequest();
-        req.open('GET', '/api/user_location');
-        req.send(null);
-        var properties = JSON.parse(req.response);
+        $.ajax({
+          type: 'GET',
+          url: '/api/user_location',
+          content_type: 'application/json',
+          success: function (data) {
+            var properties = JSON.parse(data);
+            analytics.page('landing', properties);
+          },
+          error: function () {
+            analytics.page('landing');
+          },
+        });
         // end of Custom code
-
-        analytics.page('landing', properties);
       }
   }
   loadSegment();
