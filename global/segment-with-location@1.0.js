@@ -86,10 +86,10 @@
         var req = new XMLHttpRequest();
         req.open('GET', '/api/user_location');
         req.send(null);
-        var locationDetails = JSON.parse(req.response);
+        var properties = JSON.parse(req.response);
         // end of Custom code
 
-        analytics.page('landing', locationDetails);
+        analytics.page('landing', properties);
       }
   }
   loadSegment();
