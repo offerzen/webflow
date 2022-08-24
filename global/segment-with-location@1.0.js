@@ -64,21 +64,6 @@
           analytics[name] = x(name);
         });
 
-        // Custom code
-        // Get and Set Location Details for Page Load event
-        var req = new XMLHttpRequest();
-        req.open('GET', document.location, false);
-        req.send(null);
-
-        var properties = {
-          city: req.getResponseHeader('x-geoip-city'),
-          country_code: req.getResponseHeader('x-geoip-country'),
-          country: req.getResponseHeader('x-geoip-country-name'),
-          latitude: req.getResponseHeader('x-geoip-latitude'),
-          longitude: req.getResponseHeader('x-geoip-longitude'),
-        };
-        // end of Custom code
-
         // Load analytics if possible
         analytics.load = function (key, e) {
           var t = document.createElement('script');
@@ -95,7 +80,16 @@
         analytics._writeKey = 'WGk0NXmhoqH5OVjoaJUU6Tmj9Ge6fFY6';
         analytics.SNIPPET_VERSION = '4.13.2';
         analytics.load('WGk0NXmhoqH5OVjoaJUU6Tmj9Ge6fFY6');
-        analytics.page('landing', properties);
+
+        // Custom code
+        // Get and Set Location Details for Page Load event
+        var req = new XMLHttpRequest();
+        req.open('GET', '/api/user_location');
+        req.send(null);
+        var locationDetails = JSON.parse(req.response);
+        // end of Custom code
+
+        analytics.page('landing', locationDetails);
       }
   }
   loadSegment();
