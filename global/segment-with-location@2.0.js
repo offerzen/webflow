@@ -14,14 +14,8 @@
       type: 'GET',
       url: '/api/user_location',
       content_type: 'application/json',
-      success: function (data) {
-        try {
-          var properties = JSON.parse(data);
-          analytics.page('landing', properties);
-        }
-        catch (e) {
-          analytics.page('landing');
-        }
+      success: function (properties) {
+        analytics.page('landing', properties);
       },
       error: function () {
         analytics.page('landing');
