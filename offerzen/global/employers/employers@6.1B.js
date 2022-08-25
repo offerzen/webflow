@@ -59,7 +59,7 @@ window.$loaded(function () {
 
     function onSubmitMultiStepCompanyLeadForm(token, e) {
       multiStepLeadFormButton.attr('disabled', true);
-      pageVariantMeasureEnd = btoa((new Date().getTime() / 1000));
+      window.pageVariantMeasureEnd = btoa((new Date().getTime() / 1000));
 
       let initialButtonValue = multiStepLeadFormButton.attr('value');
       let dataWait = multiStepLeadFormButton.attr('data-wait');

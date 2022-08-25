@@ -17,15 +17,15 @@
       if (!inputInteracted) {
         inputInteracted = true;
 
-        pageVariantMeasureStart = btoa((new Date().getTime() / 1000));
+        window.pageVariantMeasureStart = btoa((new Date().getTime() / 1000));
       }
     }
 
     const setTimeToSubmit = function() {
-      pageVariantMeasureEnd = btoa((new Date().getTime() / 1000));
+      window.pageVariantMeasureEnd = btoa((new Date().getTime() / 1000));
     }
 
     $("input, select").on("click focus", setTimeToInteract);
-    $("form").on("submit", setTimeToSubmit);
+    $(".company-form-email-only form, .js-company-signup-original form").on("submit", setTimeToSubmit);
   });
 }();

@@ -37,6 +37,7 @@ window.$loaded(function () {
     }
 
     function onSubmitMultiStepProspectForm(token, e) {
+      window.pageVariantMeasureEnd = btoa((new Date().getTime() / 1000));
       multiStepProspectButton.attr('disabled', true);
       let initialButtonValue = multiStepProspectButton.attr('value');
       let dataWait = multiStepProspectButton.attr('data-wait');
