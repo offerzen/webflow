@@ -11,11 +11,8 @@
   window.$loaded(function (window, document, $, undefined) {
     window.pageVariantMeasureStart = null;
     window.pageVariantMeasureEnd = null;
-    let inputInteracted = false;
-
     const setTimeToInteract = function() {
-      if (!inputInteracted) {
-        inputInteracted = true;
+      if (window.pageVariantMeasureStart == null) {        
 
         window.pageVariantMeasureStart = btoa((new Date().getTime() / 1000));
       }
