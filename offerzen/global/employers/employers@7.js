@@ -1415,6 +1415,7 @@ window.$loaded(function () {
       templateResult: formatData,
       templateSelection: formatCode,
       matcher: matchCustom,
+      dropdownParent: $('.js-country-code-dropdown'),
     });
 
     // Set selected country code based on Webflow symbol override field
@@ -1428,12 +1429,15 @@ window.$loaded(function () {
     // Autofocus the search field & set placeholder text
     $('.select2').click(function () {
       requestAnimationFrame(() => {
-        let field = document.querySelector('.select2-search__field');
+        let field = originalLeadForm.find('.select2-search__field');
         if (!field) {
           return;
         }
         field.focus();
-        $('.select2-search__field').attr('placeholder', 'Search country code');
+        $('.select2-search__field').attr(
+          'placeholder',
+          'Search by country or code'
+        );
       });
     });
 
@@ -1475,7 +1479,7 @@ window.$loaded(function () {
     phoneNumberInput.on('keyup input blur', updatePhoneNumber);
 
     // Trigger validation
-    countryCodeSelector.on('change blur', function () {
+    countryCodeSelector.on('blur', function () {
       $(phoneNumberInput).parsley().validate();
     });
 
