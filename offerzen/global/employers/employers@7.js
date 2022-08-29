@@ -129,11 +129,6 @@ window.$loaded(function () {
     // Country Data Set
     const phoneNumberCountries = [
       {
-        id: 'za',
-        text: 'South Africa',
-        code: '27',
-      },
-      {
         id: 'af',
         text: 'Afghanistan',
         code: '93',
@@ -177,6 +172,7 @@ window.$loaded(function () {
         id: 'ar',
         text: 'Argentina',
         code: '54',
+        selected: true,
       },
       {
         id: 'am',
@@ -1139,6 +1135,11 @@ window.$loaded(function () {
         code: '252',
       },
       {
+        id: 'za',
+        text: 'South Africa',
+        code: '27',
+      },
+      {
         id: 'kr',
         text: 'South Korea',
         code: '82',
@@ -1403,6 +1404,10 @@ window.$loaded(function () {
 
     const countryCodeSelector = originalLeadForm.find('.js-phone-country-code');
     const phoneNumberInput = originalLeadForm.find('.js-phone-number');
+    const countryCodeOverride = originalLeadForm
+      .find('.js-default-country-code')
+      .text()
+      .toLowerCase();
 
     // Initialise Select2
     countryCodeSelector.select2({
@@ -1411,6 +1416,14 @@ window.$loaded(function () {
       templateSelection: formatCode,
       matcher: matchCustom,
     });
+
+    // Set selected country code based on Webflow symbol override field
+    function setInitialCountryCode(countryCode) {
+      countryCodeSelector.val(countryCode);
+      countryCodeSelector.trigger('change');
+    }
+
+    setInitialCountryCode(countryCodeOverride);
 
     // Autofocus the search field & set placeholder text
     $('.select2').click(function () {
