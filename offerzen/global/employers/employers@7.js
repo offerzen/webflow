@@ -119,13 +119,6 @@ window.$loaded(function () {
     // Phone Number Input
     // ------------------------------------------------------------
 
-    function normaliseCharacters(term) {
-      return term
-        .toLocaleLowerCase()
-        .normalize('NFD') // Creates separate bytes for characters and diacritical marks
-        .replace(/[\u0300-\u036f]/g, ''); // Replaces any diacritical marks in the string
-    }
-
     // Country Data Set
     const phoneNumberCountries = [
       {
@@ -1356,6 +1349,13 @@ window.$loaded(function () {
       search: normaliseCharacters(`${code} ${text}`),
     }));
 
+    function normaliseCharacters(term) {
+      return term
+        .toLocaleLowerCase()
+        .normalize('NFD') // Creates separate bytes for characters and diacritical marks
+        .replace(/[\u0300-\u036f]/g, ''); // Replaces any diacritical marks in the string
+    }
+
     // Search Functionality
     function matchCustom(params, data) {
       if (!params.term || params.term === '') {
@@ -1404,42 +1404,62 @@ window.$loaded(function () {
 
     const countryCodeSelector = originalLeadForm.find('.js-phone-country-code');
     const phoneNumberInput = originalLeadForm.find('.js-phone-number');
-    const countryCodeOverride = originalLeadForm
-      .find('.js-default-country-code')
-      .text()
-      .toLowerCase();
 
-    // Initialise Select2
-    countryCodeSelector.select2({
-      data: phoneNumberCountries,
-      templateResult: formatData,
-      templateSelection: formatCode,
-      matcher: matchCustom,
-      dropdownParent: $('.js-country-code-dropdown'),
-    });
+    function initializePhoneNumberField() {
+      const countryCodeOverride = originalLeadForm
+        .find('.js-default-country-code')
+        .text()
+        .toLowerCase();
 
-    // Set selected country code based on Webflow symbol override field
-    function setInitialCountryCode(countryCode) {
-      countryCodeSelector.val(countryCode);
-      countryCodeSelector.trigger('change');
-    }
-
-    setInitialCountryCode(countryCodeOverride);
-
-    // Autofocus the search field & set placeholder text
-    $('.select2').click(function () {
-      requestAnimationFrame(() => {
-        let field = originalLeadForm.find('.select2-search__field');
-        if (!field) {
-          return;
-        }
-        field.focus();
-        $('.select2-search__field').attr(
-          'placeholder',
-          'Search by country or code'
-        );
+      // Initialise Select2
+      countryCodeSelector.select2({
+        data: phoneNumberCountries,
+        templateResult: formatData,
+        templateSelection: formatCode,
+        matcher: matchCustom,
+        dropdownParent: $('.js-country-code-dropdown'),
       });
-    });
+
+      // Set selected country code based on Webflow symbol override field
+      function setInitialCountryCode(countryCode) {
+        countryCodeSelector.val(countryCode);
+        countryCodeSelector.trigger('change');
+      }
+
+      setInitialCountryCode(countryCodeOverride);
+
+      // Autofocus the search field & set placeholder text
+      $('.select2').click(function () {
+        requestAnimationFrame(() => {
+          let field = originalLeadForm.find('.select2-search__field');
+          if (!field) {
+            return;
+          }
+          field.attr('autofocus', 'autofocus');
+          field.attr('placeholder', 'Search by country or code');
+          field.focus();
+          field.click();
+        });
+      });
+
+      // Update phone number to hidden input
+      countryCodeSelector.on('change', updatePhoneNumber);
+      phoneNumberInput.on('keyup input blur', updatePhoneNumber);
+
+      // Prevent symbols & letters from being inserted
+      phoneNumberInput.on('keypress', function (e) {
+        if (isNaN(e.key)) e.preventDefault();
+      });
+
+      // Trigger validation
+      countryCodeSelector.on('blur', function () {
+        $(phoneNumberInput).parsley().validate();
+      });
+
+      phoneNumberInput.on('blur', function () {
+        $(phoneNumberInput).parsley().validate();
+      });
+    }
 
     // Extract selected country data & convert to object
     function selectedCountryCode(selector) {
@@ -1474,19 +1494,6 @@ window.$loaded(function () {
         .val(`+${countryCode}${cleanNumber}`);
     }
 
-    // Update phone number to hidden input
-    countryCodeSelector.on('change', updatePhoneNumber);
-    phoneNumberInput.on('keyup input blur', updatePhoneNumber);
-
-    // Trigger validation
-    countryCodeSelector.on('blur', function () {
-      $(phoneNumberInput).parsley().validate();
-    });
-
-    phoneNumberInput.on('blur', function () {
-      $(phoneNumberInput).parsley().validate();
-    });
-
     function addPhoneValidation(onPhoneFieldReady) {
       window.parsley.addValidator('phonenumber', function (value) {
         const selectedCountry = selectedCountryCode(countryCodeSelector);
@@ -1508,10 +1515,22 @@ window.$loaded(function () {
         // Strict for core countries with 9 NSN: South Africa, Netherlands
         if (phoneDialCode.match(/\+(27|31)/)) {
           match = cleanPhoneNumberValue.match(/^[0-9]{9}$/);
+
+          if (cleanPhoneNumberValue.length <= 8) {
+            return $.Deferred().reject(
+              'Phone number is invalid. Please enter your full number.'
+            );
+          }
         }
         // Loose for others, NSN=7..11, with 1 extra in case on either side i.e. 6..12
         else {
           match = cleanPhoneNumberValue.match(/^[0-9]{6,12}$/);
+
+          if (cleanPhoneNumberValue.length <= 6) {
+            return $.Deferred().reject(
+              'Phone number is invalid. Please enter your full number.'
+            );
+          }
         }
 
         return !!match;
@@ -1604,6 +1623,7 @@ window.$loaded(function () {
       }
 
       updateSubscribeToHiringInsightsField();
+      initializePhoneNumberField();
       addPhoneValidation(onPhoneFieldReady);
       showFullListofTechRoles();
       matchCheckboxStates();
