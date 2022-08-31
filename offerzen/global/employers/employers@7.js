@@ -1435,10 +1435,8 @@ window.$loaded(function () {
           if (!field) {
             return;
           }
-          field.attr('autofocus', 'autofocus');
           field.attr('placeholder', 'Search by country or code');
           field.focus();
-          field.click();
         });
       });
 
