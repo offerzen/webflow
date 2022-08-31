@@ -1,6 +1,8 @@
 .select2-dropdown,
 .js-country-code-dropdown,
-.js-country-code-dropdown .select2-container {
+.js-country-code-dropdown .select2-container,
+.js-country-code-dropdown-multi-step,
+.js-country-code-dropdown-multi-step .select2-container {
   width: calc(100% - 35px) !important;
 }
 

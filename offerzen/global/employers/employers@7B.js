@@ -1408,23 +1408,25 @@ window.$loaded(function () {
     }
 
     const countryCodeSelector = multiStepLeadForm.find(
-      '.js-phone-country-code'
+      '.js-phone-country-code-multi-step'
     );
-    const phoneNumberInput = multiStepLeadForm.find('.js-phone-number');
+    const phoneNumberInput = multiStepLeadForm.find(
+      '.js-phone-number-multi-step'
+    );
 
     function initializePhoneNumberField() {
       const countryCodeOverride = multiStepLeadForm
-        .find('.js-default-country-code')
+        .find('.js-default-country-code-multi-step')
         .text()
         .toLowerCase();
 
       // Initialise Select2
-      const select2 = countryCodeSelector.select2({
+      const select2mulitselect = countryCodeSelector.select2({
         data: phoneNumberCountries,
         templateResult: formatData,
         templateSelection: formatCode,
         matcher: matchCustom,
-        dropdownParent: $('.js-country-code-dropdown'),
+        dropdownParent: $('.js-country-code-dropdown-multi-step'),
       });
 
       // Set selected country code based on Webflow symbol override field
@@ -1436,8 +1438,8 @@ window.$loaded(function () {
       setInitialCountryCode(countryCodeOverride);
 
       // Focus search input and set placeholder text
-      select2.siblings('.select2').click(function () {
-        $('.js-country-code-dropdown')
+      select2mulitselect.siblings('.select2').click(function () {
+        $('.js-country-code-dropdown-multi-step')
           .find('.select2-search__field')[0]
           .focus();
 
@@ -1499,7 +1501,7 @@ window.$loaded(function () {
     }
 
     function addPhoneValidation(onPhoneFieldReady) {
-      window.parsley.addValidator('phonenumber', function (value) {
+      window.parsley.addValidator('phonenumber2', function (value) {
         const selectedCountry = selectedCountryCode(countryCodeSelector);
         const phoneDialCode = `+${selectedCountry.code}`;
         const cleanPhoneNumberValue = cleanPhoneNumber(phoneNumberInput.val());
