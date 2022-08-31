@@ -10,8 +10,9 @@ window.$loaded(function () {
   };
 
   window.$parsleyLoaded(function (window, document, parsley) {
-    const originalLeadForm = $('#Original-Company-Lead-Form');
-    const originalLeadFormButton = originalLeadForm.find('input[type=submit]');
+    const multiStepLeadForm = $('#Multi-Step-Company-Lead-Form');
+    const multiStepLeadFormButton =
+      multiStepLeadForm.find('input[type=submit]');
 
     function getRoleTypes(formProperties) {
       let fields = [
@@ -20,7 +21,7 @@ window.$loaded(function () {
         'role_type[Hybrid]',
       ];
       let roleTypes = [];
-      originalLeadForm.find('.js-val-msg-roles').hide();
+      multiStepLeadForm.find('.js-val-msg-roles').hide();
 
       for (let key in formProperties) {
         if (fields.includes(key) && formProperties[key] === 'on') {
@@ -35,18 +36,18 @@ window.$loaded(function () {
         }
       }
       if (roleTypes.length < 1) {
-        originalLeadForm.find('.js-val-msg-roles').show();
+        multiStepLeadForm.find('.js-val-msg-roles').show();
       }
 
       return roleTypes;
     }
 
     function trackSubmission() {
-      var event = originalLeadForm.find('.js-analytics-event').text();
-      var action = originalLeadForm.find('.js-analytics-action').text();
-      var label = originalLeadForm.find('.js-analytics-label').text();
-      var category = originalLeadForm.find('.js-analytics-category').text();
-      var source = originalLeadForm.find('.js-analytics-source').text();
+      var event = multiStepLeadForm.find('.js-analytics-event').text();
+      var action = multiStepLeadForm.find('.js-analytics-action').text();
+      var label = multiStepLeadForm.find('.js-analytics-label').text();
+      var category = multiStepLeadForm.find('.js-analytics-category').text();
+      var source = multiStepLeadForm.find('.js-analytics-source').text();
 
       dataLayer.push({
         event: event || 'Company Lead Form Submitted',
@@ -57,19 +58,21 @@ window.$loaded(function () {
       });
     }
 
-    function onSubmitOriginalCompanyLeadForm(token, e) {
-      originalLeadFormButton.attr('disabled', true);
-      let initialButtonValue = originalLeadFormButton.attr('value');
-      let dataWait = originalLeadFormButton.attr('data-wait');
-      originalLeadFormButton.attr('value', dataWait);
+    function onSubmitMultiStepCompanyLeadForm(token, e) {
+      multiStepLeadFormButton.attr('disabled', true);
+      window.pageVariantMeasureEnd = btoa(new Date().getTime() / 1000);
+
+      let initialButtonValue = multiStepLeadFormButton.attr('value');
+      let dataWait = multiStepLeadFormButton.attr('data-wait');
+      multiStepLeadFormButton.attr('value', dataWait);
       // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
       let searchParams = new URLSearchParams(window.location.search);
-      const formData = new FormData(originalLeadForm[0]);
+      const formData = new FormData(multiStepLeadForm[0]);
       const formProperties = Object.fromEntries(formData.entries());
       const roleTypes = getRoleTypes(formProperties);
 
-      if (originalLeadForm.parsley().validate()) {
-        originalLeadForm.find('.js-missing-fields').hide();
+      if (multiStepLeadForm.parsley().validate()) {
+        multiStepLeadForm.find('.js-missing-fields').hide();
         trackSubmission();
         $.ajax({
           type: 'POST',
@@ -82,6 +85,7 @@ window.$loaded(function () {
               'g-recaptcha-response-data': {
                 webflow: token,
               },
+              page_variant_meta: `${window.pageVariantMeasureStart}-optimize-meta-${pageVariantMeasureEnd}`,
             })
           ),
           contentType: 'application/json',
@@ -90,28 +94,29 @@ window.$loaded(function () {
           },
           success: function (data) {
             if (data.user_id) {
+              localStorage.clear();
               window.location.href = data.redirect_url;
             }
           },
           // Reset form
           error: function (data) {
-            originalLeadFormButton.attr('disabled', false);
-            originalLeadFormButton.attr('value', initialButtonValue);
+            multiStepLeadFormButton.attr('disabled', false);
+            multiStepLeadFormButton.attr('value', initialButtonValue);
           },
         });
       } else {
-        $('.js-missing-fields').show();
-        originalLeadFormButton.attr('disabled', false);
-        originalLeadFormButton.attr('value', initialButtonValue);
+        multiStepLeadForm.find('.js-missing-fields').show();
+        multiStepLeadFormButton.attr('disabled', false);
+        multiStepLeadFormButton.attr('value', initialButtonValue);
       }
     }
 
     function updateSubscribeToHiringInsightsField() {
-      subscribeToCompanyNewsletter = originalLeadForm.find(
+      subscribeToCompanyNewsletter = multiStepLeadForm.find(
         '#subscribe_to_company_newsletter'
       );
       subscribeToCompanyNewsletter.on('change', function () {
-        originalLeadForm.find('#subscribe_to_hiring_insights').val(this.value);
+        multiStepLeadForm.find('#subscribe_to_hiring_insights').val(this.value);
       });
     }
 
@@ -1402,17 +1407,19 @@ window.$loaded(function () {
       return $data;
     }
 
-    const countryCodeSelector = originalLeadForm.find('.js-phone-country-code');
-    const phoneNumberInput = originalLeadForm.find('.js-phone-number');
+    const countryCodeSelector = multiStepLeadForm.find(
+      '.js-phone-country-code'
+    );
+    const phoneNumberInput = multiStepLeadForm.find('.js-phone-number');
 
     function initializePhoneNumberField() {
-      const countryCodeOverride = originalLeadForm
+      const countryCodeOverride = multiStepLeadForm
         .find('.js-default-country-code')
         .text()
         .toLowerCase();
 
       // Initialise Select2
-      countryCodeSelector.select2({
+      const select2 = countryCodeSelector.select2({
         data: phoneNumberCountries,
         templateResult: formatData,
         templateSelection: formatCode,
@@ -1428,16 +1435,15 @@ window.$loaded(function () {
 
       setInitialCountryCode(countryCodeOverride);
 
-      // Autofocus the search field & set placeholder text
-      $('.select2').click(function () {
-        requestAnimationFrame(() => {
-          let field = originalLeadForm.find('.select2-search__field');
-          if (!field) {
-            return;
-          }
-          field.attr('placeholder', 'Search by country or code');
-          field.focus();
-        });
+      // Focus search input and set placeholder text
+      select2.siblings('.select2').click(function () {
+        $('.js-country-code-dropdown')
+          .find('.select2-search__field')[0]
+          .focus();
+
+        multiStepLeadForm
+          .find('.select2-search__field')
+          .attr('placeholder', 'Search by country or code');
       });
 
       // Update phone number to hidden input
@@ -1487,8 +1493,8 @@ window.$loaded(function () {
 
     function updateContactPhoneField(countryCode, phoneNumber) {
       const cleanNumber = cleanPhoneNumber(phoneNumber);
-      originalLeadForm
-        .find('input[name=phone-number]')
+      multiStepLeadForm
+        .find('input[name=contact_phone]')
         .val(`+${countryCode}${cleanNumber}`);
     }
 
@@ -1524,7 +1530,7 @@ window.$loaded(function () {
         else {
           match = cleanPhoneNumberValue.match(/^[0-9]{6,12}$/);
 
-          if (cleanPhoneNumberValue.length <= 6) {
+          if (cleanPhoneNumberValue.length <= 5) {
             return $.Deferred().reject(
               'Phone number is invalid. Please enter your full number.'
             );
@@ -1537,7 +1543,7 @@ window.$loaded(function () {
       onPhoneFieldReady();
     }
 
-    // This is not part of the form
+    //This is not part of the form
     function showFullListofTechRoles() {
       showMoreLink = $('.js-show-more');
       faidingList = $('.fading-list');
@@ -1553,7 +1559,7 @@ window.$loaded(function () {
     }
 
     function matchCheckboxStates() {
-      originalLeadForm.find('.w-checkbox').each(function () {
+      multiStepLeadForm.find('.w-checkbox').each(function () {
         const el = $(this);
         const inputField = el.find('.w-checkbox-input');
         if (el.find('input[type=checkbox]').is(':checked')) {
@@ -1572,20 +1578,20 @@ window.$loaded(function () {
       //Check Recaptcha error
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('r')) {
-        originalLeadForm.find('.recaptcha-error').show();
+        multiStepLeadForm.find('.recaptcha-error').show();
       }
 
-      originalLeadForm
+      multiStepLeadForm
         .find('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox')
         .on('change', function (e) {
-          const formData = new FormData(originalLeadForm[0]);
+          const formData = new FormData(multiStepLeadForm[0]);
           const formProperties = Object.fromEntries(formData.entries());
 
           formProperties[e.target.name] = e.target.checked ? 'on' : 'off';
 
           const role_types = getRoleTypes(formProperties);
 
-          originalLeadForm
+          multiStepLeadForm
             .find('input[name=workplace_policy]')
             .val(role_types.join(','));
         });
@@ -1598,9 +1604,9 @@ window.$loaded(function () {
         if (!isPhoneReady || !isFormReady) return;
 
         // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
-        originalLeadFormButton.attr('disabled', false);
+        multiStepLeadFormButton.attr('disabled', false);
 
-        originalLeadForm.on('submit', function (e) {
+        multiStepLeadForm.on('submit', function (e) {
           e.preventDefault();
           grecaptcha.ready(function () {
             grecaptcha
@@ -1608,11 +1614,11 @@ window.$loaded(function () {
                 action: 'webflow',
               })
               .then(function (token) {
-                onSubmitOriginalCompanyLeadForm(token, e);
+                onSubmitMultiStepCompanyLeadForm(token, e);
               });
           });
         });
-        originalCompanyLeadFormLoaded();
+        multiStepCompanyLeadFormLoaded();
       }
 
       function onPhoneFieldReady() {
@@ -1627,7 +1633,8 @@ window.$loaded(function () {
       matchCheckboxStates();
 
       // Still needed for other parts of the page
-      window.onSubmitOriginalCompanyLeadForm = onSubmitOriginalCompanyLeadForm;
+      window.onSubmitMultiStepCompanyLeadForm =
+        onSubmitMultiStepCompanyLeadForm;
 
       isFormReady = true;
       onFormReady();
