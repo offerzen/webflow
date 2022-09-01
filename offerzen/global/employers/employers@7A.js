@@ -33,8 +33,12 @@ window.$loaded(function () {
   };
 
   window.$parsleyLoaded(function (window, document, parsley) {
-    const originalLeadForm = $('#Original-Company-Lead-Form');
-    const originalLeadFormButton = originalLeadForm.find('input[type=submit]');
+    // This is just for the orginal form
+    const form = $('#Original-Company-Lead-Form');
+    const pageRef = 'onSubmitOriginalCompanyLeadForm';
+    // End form targeting
+
+    const formSubmitButton = form.find('input[type=submit]');
 
     function getRoleTypes(formProperties) {
       let fields = [
@@ -43,7 +47,7 @@ window.$loaded(function () {
         'role_type[Hybrid]',
       ];
       let roleTypes = [];
-      originalLeadForm.find('.js-val-msg-roles').hide();
+      form.find('.js-val-msg-roles').hide();
 
       for (let key in formProperties) {
         if (fields.includes(key) && formProperties[key] === 'on') {
@@ -58,18 +62,18 @@ window.$loaded(function () {
         }
       }
       if (roleTypes.length < 1) {
-        originalLeadForm.find('.js-val-msg-roles').show();
+        form.find('.js-val-msg-roles').show();
       }
 
       return roleTypes;
     }
 
     function trackSubmission() {
-      var event = originalLeadForm.find('.js-analytics-event').text();
-      var action = originalLeadForm.find('.js-analytics-action').text();
-      var label = originalLeadForm.find('.js-analytics-label').text();
-      var category = originalLeadForm.find('.js-analytics-category').text();
-      var source = originalLeadForm.find('.js-analytics-source').text();
+      var event = form.find('.js-analytics-event').text();
+      var action = form.find('.js-analytics-action').text();
+      var label = form.find('.js-analytics-label').text();
+      var category = form.find('.js-analytics-category').text();
+      var source = form.find('.js-analytics-source').text();
 
       dataLayer.push({
         event: event || 'Company Lead Form Submitted',
@@ -80,19 +84,20 @@ window.$loaded(function () {
       });
     }
 
-    function onSubmitOriginalCompanyLeadForm(token, e) {
-      originalLeadFormButton.attr('disabled', true);
-      let initialButtonValue = originalLeadFormButton.attr('value');
-      let dataWait = originalLeadFormButton.attr('data-wait');
-      originalLeadFormButton.attr('value', dataWait);
+    function onSubmitForm(token, e) {
+      formSubmitButton.attr('disabled', true);
+      window.pageVariantMeasureEnd = btoa(new Date().getTime() / 1000);
+      let initialButtonValue = formSubmitButton.attr('value');
+      let dataWait = formSubmitButton.attr('data-wait');
+      formSubmitButton.attr('value', dataWait);
       // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
       let searchParams = new URLSearchParams(window.location.search);
-      const formData = new FormData(originalLeadForm[0]);
+      const formData = new FormData(form[0]);
       const formProperties = Object.fromEntries(formData.entries());
       const roleTypes = getRoleTypes(formProperties);
 
-      if (originalLeadForm.parsley().validate()) {
-        originalLeadForm.find('.js-missing-fields').hide();
+      if (form.parsley().validate()) {
+        form.find('.js-missing-fields').hide();
         trackSubmission();
         $.ajax({
           type: 'POST',
@@ -114,28 +119,29 @@ window.$loaded(function () {
           },
           success: function (data) {
             if (data.user_id) {
+              localStorage.clear();
               window.location.href = data.redirect_url;
             }
           },
           // Reset form
           error: function (data) {
-            originalLeadFormButton.attr('disabled', false);
-            originalLeadFormButton.attr('value', initialButtonValue);
+            formSubmitButton.attr('disabled', false);
+            formSubmitButton.attr('value', initialButtonValue);
           },
         });
       } else {
-        $('.js-missing-fields').show();
-        originalLeadFormButton.attr('disabled', false);
-        originalLeadFormButton.attr('value', initialButtonValue);
+        form.find('.js-missing-fields').show();
+        formSubmitButton.attr('disabled', false);
+        formSubmitButton.attr('value', initialButtonValue);
       }
     }
 
     function updateSubscribeToHiringInsightsField() {
-      subscribeToCompanyNewsletter = originalLeadForm.find(
+      subscribeToCompanyNewsletter = form.find(
         '#subscribe_to_company_newsletter'
       );
       subscribeToCompanyNewsletter.on('change', function () {
-        originalLeadForm.find('#subscribe_to_hiring_insights').val(this.value);
+        form.find('#subscribe_to_hiring_insights').val(this.value);
       });
     }
 
@@ -1426,11 +1432,11 @@ window.$loaded(function () {
       return $data;
     }
 
-    const countryCodeSelector = originalLeadForm.find('.js-phone-country-code');
-    const phoneNumberInput = originalLeadForm.find('.js-phone-number');
+    const countryCodeSelector = form.find('.js-phone-country-code');
+    const phoneNumberInput = form.find('.js-phone-number');
 
     function initializePhoneNumberField() {
-      const countryCodeOverride = originalLeadForm
+      const countryCodeOverride = form
         .find('.js-default-country-code')
         .text()
         .toLowerCase();
@@ -1441,8 +1447,10 @@ window.$loaded(function () {
         templateResult: formatData,
         templateSelection: formatCode,
         matcher: matchCustom,
-        dropdownParent: $('.js-country-code-dropdown'),
+        dropdownParent: form.find('.js-country-code-dropdown'),
       });
+
+      console.log('original', countryCodeSelector, phoneNumberInput);
 
       // Set selected country code based on Webflow symbol override field
       function setInitialCountryCode(countryCode) {
@@ -1510,61 +1518,63 @@ window.$loaded(function () {
 
     function updateContactPhoneField(countryCode, phoneNumber) {
       const cleanNumber = cleanPhoneNumber(phoneNumber);
-      originalLeadForm
+      form
         .find('input[name=contact_phone]')
         .val(`+${countryCode}${cleanNumber}`);
     }
 
-    function addPhoneValidation(onPhoneFieldReady) {
-      window.parsley.addValidator('phonenumber', function (value) {
-        const selectedCountry = selectedCountryCode(countryCodeSelector);
-        const phoneDialCode = `+${selectedCountry.code}`;
-        const cleanPhoneNumberValue = cleanPhoneNumber(phoneNumberInput.val());
+    function phoneNumberValidator(value) {
+      const selectedCountry = selectedCountryCode(countryCodeSelector);
+      const phoneDialCode = `+${selectedCountry.code}`;
+      const cleanPhoneNumberValue = cleanPhoneNumber(phoneNumberInput.val());
 
-        let match = null;
+      let match = null;
 
-        // FORMATS (+<country code> <NSN length>) to consider based on expansion plans March 2022:
-        // South Africa:           +27 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_South_Africa
-        // Netherlands:            +31 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Netherlands
-        // Germany:                +49 <7-11>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Germany
-        // Portugal:               +351 <9>      https://en.wikipedia.org/wiki/Telephone_numbers_in_Portugal
-        // Spain:                  +34 <8-9>     https://en.wikipedia.org/wiki/Telephone_numbers_in_Spain
-        // Italy:                  +39 <8-10>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Italy
-        // Ireland:                +353 <7-9>    https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Republic_of_Ireland
-        // Northern Ireland / UK:  +44 <7,9,10>  https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Kingdom
+      // FORMATS (+<country code> <NSN length>) to consider based on expansion plans March 2022:
+      // South Africa:           +27 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_South_Africa
+      // Netherlands:            +31 <9>       https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Netherlands
+      // Germany:                +49 <7-11>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Germany
+      // Portugal:               +351 <9>      https://en.wikipedia.org/wiki/Telephone_numbers_in_Portugal
+      // Spain:                  +34 <8-9>     https://en.wikipedia.org/wiki/Telephone_numbers_in_Spain
+      // Italy:                  +39 <8-10>    https://en.wikipedia.org/wiki/Telephone_numbers_in_Italy
+      // Ireland:                +353 <7-9>    https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Republic_of_Ireland
+      // Northern Ireland / UK:  +44 <7,9,10>  https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Kingdom
 
-        // Strict for core countries with 9 NSN: South Africa, Netherlands
-        if (phoneDialCode.match(/\+(27|31)/)) {
-          match = cleanPhoneNumberValue.match(/^[0-9]{9}$/);
+      // Strict for core countries with 9 NSN: South Africa, Netherlands
+      if (phoneDialCode.match(/\+(27|31)/)) {
+        match = cleanPhoneNumberValue.match(/^[0-9]{9}$/);
 
-          if (cleanPhoneNumberValue.length <= 8) {
-            return $.Deferred().reject(
-              'Phone number is invalid. Please enter your full number.'
-            );
-          }
+        if (cleanPhoneNumberValue.length <= 8) {
+          return $.Deferred().reject(
+            'Phone number is invalid. Please enter your full number.'
+          );
         }
-        // Loose for others, NSN=7..11, with 1 extra in case on either side i.e. 6..12
-        else {
-          match = cleanPhoneNumberValue.match(/^[0-9]{6,12}$/);
+      }
+      // Loose for others, NSN=7..11, with 1 extra in case on either side i.e. 6..12
+      else {
+        match = cleanPhoneNumberValue.match(/^[0-9]{6,12}$/);
 
-          if (cleanPhoneNumberValue.length <= 5) {
-            return $.Deferred().reject(
-              'Phone number is invalid. Please enter your full number.'
-            );
-          }
+        if (cleanPhoneNumberValue.length <= 5) {
+          return $.Deferred().reject(
+            'Phone number is invalid. Please enter your full number.'
+          );
         }
+      }
 
-        return !!match;
-      });
+      return !!match;
+    }
 
-      onPhoneFieldReady();
+    function addPhoneValidation() {
+      if (!window.Parsley.hasValidator('phonenumber')) {
+        window.parsley.addValidator('phonenumber', phoneNumberValidator);
+      }
     }
 
     // This is not part of the form
     function showFullListofTechRoles() {
-      showMoreLink = $('.js-show-more');
-      faidingList = $('.fading-list');
-      fullList = $('.full-list');
+      showMoreLink = form.find('.js-show-more');
+      faidingList = form.find('.fading-list');
+      fullList = form.find('.full-list');
 
       showMoreLink.one('click', function (e) {
         e.preventDefault();
@@ -1576,7 +1586,7 @@ window.$loaded(function () {
     }
 
     function matchCheckboxStates() {
-      originalLeadForm.find('.w-checkbox').each(function () {
+      form.find('.w-checkbox').each(function () {
         const el = $(this);
         const inputField = el.find('.w-checkbox-input');
         if (el.find('input[type=checkbox]').is(':checked')) {
@@ -1592,38 +1602,31 @@ window.$loaded(function () {
     // ------------------------------------------------------------
 
     (function init() {
-      //Check Recaptcha error
+      console.log('init');
+      // Check Recaptcha error
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('r')) {
-        originalLeadForm.find('.recaptcha-error').show();
+        form.find('.recaptcha-error').show();
       }
 
-      originalLeadForm
+      form
         .find('#in-office-checkbox, #fully-remote-checkbox, #hybrid-checkbox')
         .on('change', function (e) {
-          const formData = new FormData(originalLeadForm[0]);
+          const formData = new FormData(form[0]);
           const formProperties = Object.fromEntries(formData.entries());
 
           formProperties[e.target.name] = e.target.checked ? 'on' : 'off';
 
           const role_types = getRoleTypes(formProperties);
 
-          originalLeadForm
-            .find('input[name=workplace_policy]')
-            .val(role_types.join(','));
+          form.find('input[name=workplace_policy]').val(role_types.join(','));
         });
 
-      // Load testing
-      let isFormReady = false;
-      let isPhoneReady = false;
-
       function onFormReady() {
-        if (!isPhoneReady || !isFormReady) return;
-
         // Form is ready, but might still be waiting for recaptcha. That has it's own check in submit, so can be ignored
-        originalLeadFormButton.attr('disabled', false);
+        formSubmitButton.attr('disabled', false);
 
-        originalLeadForm.on('submit', function (e) {
+        form.on('submit', function (e) {
           e.preventDefault();
           grecaptcha.ready(function () {
             grecaptcha
@@ -1631,28 +1634,21 @@ window.$loaded(function () {
                 action: 'webflow',
               })
               .then(function (token) {
-                onSubmitOriginalCompanyLeadForm(token, e);
+                onSubmitForm(token, e);
               });
           });
         });
-        originalCompanyLeadFormLoaded();
-      }
-
-      function onPhoneFieldReady() {
-        isPhoneReady = true;
-        onFormReady();
       }
 
       updateSubscribeToHiringInsightsField();
       initializePhoneNumberField();
-      addPhoneValidation(onPhoneFieldReady);
+      addPhoneValidation();
       showFullListofTechRoles();
       matchCheckboxStates();
 
       // Still needed for other parts of the page
-      window.onSubmitOriginalCompanyLeadForm = onSubmitOriginalCompanyLeadForm;
+      window[pageRef] = onSubmitForm;
 
-      isFormReady = true;
       onFormReady();
     })();
   });
