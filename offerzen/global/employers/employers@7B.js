@@ -1,25 +1,31 @@
 window.$loaded(function () {
-  let select2Loaded = false;
+  window.hasLoadedSelect2 = window.hasLoadedSelect2 ?? false;
 
   window.$parsleyLoaded = function (cb) {
     setTimeout(() => {
-      if (window.Parsley && window.ParsleyValidator && select2Loaded) {
+      if (
+        window.Parsley &&
+        window.ParsleyValidator &&
+        window.hasLoadedSelect2
+      ) {
         cb(window, document, parsley, undefined);
         return;
       }
       $parsleyLoaded(cb);
     }, 50);
 
-    var script = document.createElement('script');
-    script.onload = function () {
-      select2Loaded = true;
-    };
-    script.setAttribute(
-      'src',
-      'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'
-    );
-    script.setAttribute('async', true);
-    document.getElementsByTagName('head')[0].appendChild(script);
+    if (!window.hasLoadedSelect2) {
+      var script = document.createElement('script');
+      script.onload = function () {
+        window.hasLoadedSelect2 = true;
+      };
+      script.setAttribute(
+        'src',
+        'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'
+      );
+      script.setAttribute('async', true);
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }
   };
 
   window.$parsleyLoaded(function (window, document, parsley) {
@@ -138,6 +144,8 @@ window.$loaded(function () {
     // ------------------------------------------------------------
     // Phone Number Input
     // ------------------------------------------------------------
+    let countryCodeSelector = null;
+    let phoneNumberInput = null;
 
     // Country Data Set
     const phoneNumberCountries = [
@@ -1422,10 +1430,10 @@ window.$loaded(function () {
       return $data;
     }
 
-    const countryCodeSelector = form.find('.js-phone-country-code');
-    const phoneNumberInput = form.find('.js-phone-number');
-
     function initializePhoneNumberField() {
+      countryCodeSelector = form.find('.js-phone-country-code');
+      phoneNumberInput = form.find('.js-phone-number');
+
       const countryCodeOverride = form
         .find('.js-default-country-code')
         .text()
@@ -1440,7 +1448,6 @@ window.$loaded(function () {
         dropdownParent: form.find('.js-country-code-dropdown'),
       });
 
-      console.log('multistep', countryCodeSelector, phoneNumberInput);
       // Set selected country code based on Webflow symbol override field
       function setInitialCountryCode(countryCode) {
         countryCodeSelector.val(countryCode);
@@ -1591,7 +1598,6 @@ window.$loaded(function () {
     // ------------------------------------------------------------
 
     (function init() {
-      console.log('init');
       // Check Recaptcha error
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('r')) {
