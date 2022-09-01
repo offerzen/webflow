@@ -1,12 +1,35 @@
 window.$loaded(function () {
+  let select2Loaded = false;
+  let parsleyCB = null;
+
   window.$parsleyLoaded = function (cb) {
-    setTimeout(() => {
-      if (window.Parsley && window.ParsleyValidator) {
+    parsleyCB = () => {
+      if (window.Parsley && window.ParsleyValidator && select2Loaded) {
         cb(window, document, parsley, undefined);
+        return true;
+      }
+      return false;
+    };
+    setTimeout(() => {
+      if (parsleyCB()) {
         return;
       }
       $parsleyLoaded(cb);
     }, 50);
+
+    var script = document.createElement('script');
+    script.onload = function () {
+      select2Loaded = true;
+      if (parsleyCB) {
+        parsleyCB();
+      }
+    };
+    script.setAttribute(
+      'src',
+      'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'
+    );
+    script.setAttribute('async', true);
+    document.getElementsByTagName('head')[0].appendChild(script);
   };
 
   window.$parsleyLoaded(function (window, document, parsley) {
@@ -1431,13 +1454,13 @@ window.$loaded(function () {
 
       // Focus search input and set placeholder text
       select2.siblings('.select2').click(function () {
-        $('.js-country-code-dropdown')
-          .find('.select2-search__field')[0]
-          .focus();
+        const field = $(this)
+          .parent()
+          .siblings('.js-country-code-dropdown')
+          .find('.select2-search__field');
+        field[0].focus();
 
-        originalLeadForm
-          .find('.select2-search__field')
-          .attr('placeholder', 'Search by country or code');
+        field.attr('placeholder', 'Search by country or code');
       });
 
       // Update phone number to hidden input
