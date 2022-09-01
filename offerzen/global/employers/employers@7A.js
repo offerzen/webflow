@@ -1,17 +1,10 @@
 window.$loaded(function () {
   let select2Loaded = false;
-  let parsleyCB = null;
 
   window.$parsleyLoaded = function (cb) {
-    parsleyCB = () => {
+    setTimeout(() => {
       if (window.Parsley && window.ParsleyValidator && select2Loaded) {
         cb(window, document, parsley, undefined);
-        return true;
-      }
-      return false;
-    };
-    setTimeout(() => {
-      if (parsleyCB()) {
         return;
       }
       $parsleyLoaded(cb);
@@ -20,9 +13,6 @@ window.$loaded(function () {
     var script = document.createElement('script');
     script.onload = function () {
       select2Loaded = true;
-      if (parsleyCB) {
-        parsleyCB();
-      }
     };
     script.setAttribute(
       'src',
