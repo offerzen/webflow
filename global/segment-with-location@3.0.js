@@ -15,10 +15,10 @@
       url: '/api/user_location',
       content_type: 'application/json',
       success: function (properties) {
-        analytics.page('landing', properties);
+        window.analytics.page('landing', properties);
       },
       error: function () {
-        analytics.page('landing');
+        window.analytics.page('landing');
       },
     });
     // end of Custom code
