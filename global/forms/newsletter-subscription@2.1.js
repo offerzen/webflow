@@ -38,7 +38,7 @@ $loaded(
         .done(data => {
           $formSuccess.show();
           $form.hide();
-          analytics.identify(data.subscriber_id, { integrations: { Clearbit: false }});
+          analytics.identify(data.subscriber_id, {}, { integrations: { Clearbit: false }});
         })
         .fail((request, status, error) => {
           var notice = '';
