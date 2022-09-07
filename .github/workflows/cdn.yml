@@ -41,7 +41,7 @@ jobs:
           name: global-files
           path: global/
       
-      - name: Download offezen scripts
+      - name: Download offerzen scripts
         uses: actions/download-artifact@v2
         with:
           name: offerzen-files
