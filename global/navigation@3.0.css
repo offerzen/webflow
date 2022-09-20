@@ -1,0 +1,36 @@
+.w-nav-overlay {
+  overflow: scroll !important;
+  height: auto !important;
+  min-height: calc(100vh - 61px) !important;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.link-block-right:hover .link-block-right-title {
+  font-weight: 600 !important;
+}
+
+.featured-link:hover .featured-title {
+  font-weight: 600 !important;
+}
+
+.display-none {
+  display: none;
+}
+
+.display-block {
+  display: block;
+}
+
+.conversion-item-mobile:hover .tick-icon,
+.conversion-item-mobile:focus .tick-icon,
+.conversion-item:hover .tick-icon-desktop,
+.conversion-item:focus .tick-icon-desktop {
+  display: block;
+}
+
+.nav-dropdown-container {
+  box-shadow: 4px 4px 20px rgba(11, 18, 54, 0.5);
+}
