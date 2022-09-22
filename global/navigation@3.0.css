@@ -2,10 +2,19 @@
   overflow: scroll !important;
   height: auto !important;
   min-height: calc(100vh - 61px) !important;
+  position: fixed;
+  top: 62px;
+}
+
+.items-container {
+  position: relative !important;
+  width: 100% !important;
+  min-height: calc(100vh - 61px) !important;
 }
 
 .no-scroll {
   overflow: hidden;
+  position: fixed;
 }
 
 .link-block-right:hover .link-block-right-title {
@@ -14,14 +23,6 @@
 
 .featured-link:hover .featured-title {
   font-weight: 600 !important;
-}
-
-.display-none {
-  display: none;
-}
-
-.display-block {
-  display: block;
 }
 
 .conversion-item-mobile:hover .tick-icon,
