@@ -1,4 +1,4 @@
-!function () {
+!(function () {
   window.$loaded(function (window, document, $, undefined) {
     const body = $(document.body);
     const nav = $('.js-navbar');
@@ -7,6 +7,8 @@
     const conversionContainer = nav.find('.js-conversion-dropdown');
     const conversionButton = nav.find('.js-sign-up-button');
     const conversionCloseButton = nav.find('.js-conversion-dropdown-close');
+
+    const menuContents = nav.find('.items-container');
 
     const menuOpenIcon = nav.find('.open-icon');
     const menuCloseIcon = nav.find('.close-icon');
@@ -21,6 +23,14 @@
       menuCloseIcon.show();
       menuOpenIcon.hide();
       $('.intercom-lightweight-app').hide();
+    }
+
+    function setMenuHeight() {
+      if ($(window).width() <= 991) {
+        menuContents.css('height', window.innerHeight - 62);
+      } else {
+        menuContents.css('height', 'auto');
+      }
     }
 
     // ------------------
@@ -42,7 +52,8 @@
           body.removeClass('no-scroll');
           showOpenIcon();
         }
-      }, 1);
+        setMenuHeight();
+      }, 30);
     });
 
     // ------------------
@@ -73,7 +84,60 @@
       conversionContainer.hide();
     });
 
+    // ------------------
+    // Analytics
+    // ------------------
+
+    const ready = function () {
+      (function trackAnalytics() {
+        function onElementClick(e) {           
+          let name = nav.find('.js-analytics-props-name-full-nav').text();
+          let category = nav
+            .find('.js-analytics-props-category-full-nav')
+            .text();
+          let source_detail = nav
+            .find('.js-analytics-props-source-detail-full-nav')
+            .text();
+          let link = $(this);
+          let action =
+            link.attr('data-action') ??
+            link.find('.js-analytics-props-data-action').text();
+          let label = window.location.href;
+
+          let properties = { category, action, label, source_detail };
+          
+          console.log({properties});
+
+          analytics.track(name, properties, {
+            integrations: { Intercom: false }
+          });
+        }
+
+        function trackElement() {
+          let link = $(this);
+          link.on('click', onElementClick);
+        }
+
+        // change to track-nav
+        $('[data-js="track-cta"]').each(trackElement);
+      })();
+      
+      function debounce(func, timeout = 10) {
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            func.apply(this, args);
+          }, timeout);
+        };
+      }
+      
+      setMenuHeight();
+      
+      $(window).on('resize', debounce(setMenuHeight, 40));
+    };
+
     $(document).ready(ready);
     $(document).on('page:load', ready);
   });
-}();
+})();
