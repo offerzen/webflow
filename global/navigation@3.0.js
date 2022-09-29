@@ -116,8 +116,7 @@
           link.on('click', onElementClick);
         }
 
-        // change to track-nav
-        $('[data-js="track-cta"]').each(trackElement);
+        $('[data-js="track-nav"]').each(trackElement);
       })();
 
       function debounce(func, timeout = 10) {
