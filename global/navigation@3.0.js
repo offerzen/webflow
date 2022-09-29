@@ -2,14 +2,12 @@
   window.$loaded(function (window, document, $, undefined) {
     const body = $(document.body);
     const nav = $('.js-navbar');
-    const menuButton = nav.find('.js-menu-button');
 
     const conversionContainer = nav.find('.js-conversion-dropdown');
-    const conversionButton = nav.find('.js-sign-up-button');
-    const conversionCloseButton = nav.find('.js-conversion-dropdown-close');
+    const conversionButton = nav.find('.js-conversion-button');
 
-    const menuContents = nav.find('.items-container');
-
+    const menu = nav.find('.items-container');
+    const menuButton = nav.find('.js-menu-button');
     const menuOpenIcon = nav.find('.open-icon');
     const menuCloseIcon = nav.find('.close-icon');
 
@@ -27,9 +25,9 @@
 
     function setMenuHeight() {
       if ($(window).width() <= 991) {
-        menuContents.css('height', window.innerHeight - 62);
+        menu.css('height', window.innerHeight - 61);
       } else {
-        menuContents.css('height', 'auto');
+        menu.css('height', 'auto');
       }
     }
 
@@ -37,12 +35,12 @@
     // Actions when hamburger button is clicked
     // ------------------
 
-    menuButton.on('click', function (event) {
+    menuButton.on('click', function () {
       // Close conversion mega menu when mobile menu is open
-      if (conversionContainer.css('display') === 'block') {
-        conversionContainer.hide();
+      if (conversionContainer.attr('data-visible') === 'true') {
+        conversionContainer.attr('data-visible', 'false')
       }
-
+      
       // Delay actions to make sure Webflow has finished it's click event
       setTimeout(() => {
         if (menuButton.hasClass('w--open')) {
@@ -60,16 +58,18 @@
     // Custom 'sign up' conversion mega menu
     // ------------------
 
-    conversionButton.add(conversionCloseButton).on('click', function (event) {
-      if (conversionContainer.css('display') === 'none') {
-        conversionContainer.show();
-      } else {
-        conversionContainer.hide();
-      }
-
-      // Check if menu is open and set appropriate icon
+    conversionButton.on('click', function () {
+       if (conversionContainer.attr('data-visible') === 'false') {
+         conversionContainer.attr('data-visible', 'true');
+       } else {
+         conversionContainer.attr('data-visible', 'false');
+       }
+       
+      // Check if menu is open, close it and open conversion
       if (menuButton.hasClass('w--open')) {
         showOpenIcon();
+        menuButton.triggerHandler('tap');
+        conversionContainer.attr('data-visible', 'true');
       }
     });
 
@@ -81,7 +81,7 @@
       ) {
         return;
       }
-      conversionContainer.hide();
+      conversionContainer.attr('data-visible', 'false');
     });
 
     // ------------------
@@ -90,7 +90,7 @@
 
     const ready = function () {
       (function trackAnalytics() {
-        function onElementClick(e) {           
+        function onElementClick() {
           let name = nav.find('.js-analytics-props-name-full-nav').text();
           let category = nav
             .find('.js-analytics-props-category-full-nav')
@@ -105,11 +105,9 @@
           let label = window.location.href;
 
           let properties = { category, action, label, source_detail };
-          
-          console.log({properties});
 
           analytics.track(name, properties, {
-            integrations: { Intercom: false }
+            integrations: { Intercom: false },
           });
         }
 
@@ -121,7 +119,7 @@
         // change to track-nav
         $('[data-js="track-cta"]').each(trackElement);
       })();
-      
+
       function debounce(func, timeout = 10) {
         let timer;
         return (...args) => {
@@ -131,9 +129,8 @@
           }, timeout);
         };
       }
-      
+
       setMenuHeight();
-      
       $(window).on('resize', debounce(setMenuHeight, 40));
     };
 
