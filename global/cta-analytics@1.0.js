@@ -23,7 +23,7 @@
               { integrations: { Intercom: false } },
               function () {
                 //enable clicks
-                link.attr('style', 'pointer-events: auto');
+                link.attr('disabled', null);
               }
             );
           });
