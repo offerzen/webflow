@@ -1,8 +1,8 @@
 !function () {
   window.$loaded(function (window, document, $, undefined) {
     var ready = function () {
-      (function trackAnalytics() {
-        function trackElement () {
+      (function trackCTAAnalytics() {
+        function trackCTAElement() {
           var link = $(this);
           var name = link.attr('data-name');
           var category = link.attr('data-category');
@@ -10,28 +10,28 @@
           var source = link.attr('data-source');
           var label = link.attr('data-label');
           var source_detail = link.attr('data-source-detail');
-          var href = link.attr('href');
 
           var properties = { category, action, source, label, source_detail };
 
-          link.one('click', function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+          link.on('click', function (e) {
+            //disable clicks
+            link.attr('style', 'pointer-events: none');
 
             analytics.track(
               name,
               properties,
               { integrations: { Intercom: false } },
               function () {
-                return window.location.href = href;
+                //enable clicks
+                link.attr('style', 'pointer-events: auto');
               }
             );
           });
         }
 
         // Some pages use -cta, some use -nav
-        $('[data-js="track-nav"]').each(trackElement);
-        $('[data-js="track-cta"]').each(trackElement);
+        $('[data-js="track-nav"]').each(trackCTAElement);
+        $('[data-js="track-cta"]').each(trackCTAElement);
       })();
     };
 
