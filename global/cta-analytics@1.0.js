@@ -15,7 +15,7 @@
 
           link.on('click', function (e) {
             //disable clicks
-            link.attr('style', 'pointer-events: none');
+            link.attr('disabled', true);
 
             analytics.track(
               name,
@@ -23,7 +23,7 @@
               { integrations: { Intercom: false } },
               function () {
                 //enable clicks
-                link.attr('style', 'pointer-events: auto');
+                link.attr('disabled', null);
               }
             );
           });
