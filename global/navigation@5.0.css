@@ -64,6 +64,7 @@
 .current-link {
   background-color: rgba(47, 150, 244, 0.15);
   font-weight: 600;
+  pointer-events: none;
 }
 
 .link-block-right.current-link .link-block-right-title {
