@@ -5,6 +5,7 @@
 
     const conversionContainer = nav.find('.js-conversion-dropdown');
     const conversionButton = nav.find('.js-conversion-button');
+    const conversionSignUpButton = nav.find('.js-sign-up-button');
 
     const menu = nav.find('.items-container');
     const menuButton = nav.find('.js-menu-button');
@@ -39,7 +40,7 @@
       // Close conversion mega menu when mobile menu is open
       if (conversionContainer.attr('data-visible') === 'true') {
         conversionContainer.attr('data-visible', 'false');
-        conversionButton.removeClass('active-conversion-button');
+        conversionSignUpButton.removeClass('active-conversion-button');
       }
 
       // Delay actions to make sure Webflow has finished it's click event
@@ -61,10 +62,10 @@
 
     conversionButton.on('click', function () {
       if (conversionContainer.attr('data-visible') === 'false') {
-        conversionButton.addClass('active-conversion-button');
+        conversionSignUpButton.addClass('active-conversion-button');
         conversionContainer.attr('data-visible', 'true');
       } else {
-        conversionButton.removeClass('active-conversion-button');
+        conversionSignUpButton.removeClass('active-conversion-button');
         conversionContainer.attr('data-visible', 'false');
       }
 
@@ -72,7 +73,7 @@
       if (menuButton.hasClass('w--open')) {
         showOpenIcon();
         menuButton.triggerHandler('tap');
-        conversionButton.addClass('active-conversion-button');
+        conversionSignUpButton.addClass('active-conversion-button');
         conversionContainer.attr('data-visible', 'true');
       }
     });
@@ -85,14 +86,14 @@
       ) {
         return;
       }
-      conversionButton.removeClass('active-conversion-button');
+      conversionSignUpButton.removeClass('active-conversion-button');
       conversionContainer.attr('data-visible', 'false');
     });
 
     // ------------------
     // Nav breadcrumbs / highlight
     // ------------------
-    
+
     // Check if the link contains offerzen.com
     function isOnDomain(href) {
       let isValid = href.match(/^https:\/\/www\.offerzen\.com/) != null;
@@ -116,20 +117,20 @@
 
       return pageHref === linkHref;
     }
-    
-    function highlightCurrentLink () {
+
+    function highlightCurrentLink() {
       const navLinks = $('[data-js="nav-dropdown-container"]').find('a');
 
       navLinks.each(function () {
         const link = $(this);
         const linkURL = link.attr('href');
-        
-        if(checkLinkMatch(linkURL)) {
-           link
-             .closest('[data-js="nav-dropdown"]')
-             .find('[data-js="nav-dropdown-toggle"]')
-             .addClass('current-parent');
-           link.addClass('current-link');
+
+        if (checkLinkMatch(linkURL)) {
+          link
+            .closest('[data-js="nav-dropdown"]')
+            .find('[data-js="nav-dropdown-toggle"]')
+            .addClass('current-parent');
+          link.addClass('current-link');
         }
       });
     }
@@ -181,7 +182,7 @@
 
       setMenuHeight();
       $(window).on('resize', debounce(setMenuHeight, 40));
-      
+
       highlightCurrentLink();
     };
 
