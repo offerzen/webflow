@@ -89,7 +89,7 @@
 
       function trackSubmission() {
         var emailValue = form.find('#contact_email').val();
-        var isPlaywrightTest = emailValue.includes('playwrighttest');
+        var isPlaywrightTest = emailValue.match(/^\s*playwrighttest@offerzen\.com\s*$/i) != null;
 
         if (!isPlaywrightTest) {
           var event = form.find('.js-analytics-event').text();
