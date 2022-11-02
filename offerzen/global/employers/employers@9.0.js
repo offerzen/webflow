@@ -88,19 +88,24 @@
       }
 
       function trackSubmission() {
-        var event = form.find('.js-analytics-event').text();
-        var action = form.find('.js-analytics-action').text();
-        var label = form.find('.js-analytics-label').text();
-        var category = form.find('.js-analytics-category').text();
-        var source = form.find('.js-analytics-source').text();
+        var emailValue = form.find('#contact_email').val();
+        var isPlaywrightTest = emailValue.includes('playwrighttest');
 
-        dataLayer.push({
-          event: event || 'Company Lead Form Submitted',
-          action: action || 'Lead Form Submitted',
-          label: label || 'Company Sign Up / Employer Landing Page',
-          category: category || 'Core',
-          source: source || 'Demand Sign Up',
-        });
+        if (!isPlaywrightTest) {
+          var event = form.find('.js-analytics-event').text();
+          var action = form.find('.js-analytics-action').text();
+          var label = form.find('.js-analytics-label').text();
+          var category = form.find('.js-analytics-category').text();
+          var source = form.find('.js-analytics-source').text();
+
+          dataLayer.push({
+            event: event || 'Company Lead Form Submitted',
+            action: action || 'Lead Form Submitted',
+            label: label || 'Company Sign Up / Employer Landing Page',
+            category: category || 'Core',
+            source: source || 'Demand Sign Up',
+          });
+        }
       }
 
       function onSubmitForm(token, e) {
@@ -152,8 +157,7 @@
 
               if (data.recaptcha_verify) {
                 form.find('.recaptcha-error').show();
-              }
-              else {
+              } else {
                 form.find('.js-submit-error').show();
               }
             },
