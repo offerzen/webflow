@@ -109,9 +109,8 @@
 
       function onSubmitForm(token, e) {
         formSubmitButton.attr('disabled', true);
-        window.pageVariantMeasureEnd = btoa(new Date().getTime() / 1000);
-
         formSubmitButton.text(dataWait);
+        window.pageVariantMeasureEnd = btoa(new Date().getTime() / 1000);
 
         // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
         let searchParams = new URLSearchParams(window.location.search);
