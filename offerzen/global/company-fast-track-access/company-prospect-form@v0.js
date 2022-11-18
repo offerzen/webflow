@@ -142,8 +142,6 @@
               Accept: 'application/json',
             },
             success: function (data) {
-              $('.w-form-done').hide();
-              form.show();
               if (data.id) {
                 startProspectPolling(data.id);
               }
