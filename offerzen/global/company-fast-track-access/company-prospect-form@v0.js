@@ -122,7 +122,7 @@
           // Setting submit button label
           let buttonLabelTimer = setTimeout(function () {
             formSubmitButton.text(dataBusy);
-          }, 1000);
+          }, 5000);
           // Hide errors
           form.find('.js-missing-fields').hide();
           const prospectProperties = Object.assign({}, formProperties, {
