@@ -7,16 +7,26 @@
   // END FORM TARGETING
   // This needs to run regardless of whether JQuery has loaded
   // Disable button
-  const button = document.querySelector(
+  const formSubmitButton = document.querySelector(
     `${prospectFormId} ${formSubmitButtonSelector}`
   );
-  button.setAttribute('disabled', 'disabled');
-  const label = button.value;
-  button.value = 'Loading...';
-  function enableSubmitButton() {
-    button.value = label;
-    button.removeAttribute('disabled');
+
+  // Store button labels for state changes
+  let initialButtonValue = formSubmitButton.getAttribute('data-initial');
+  let dataWait = formSubmitButton.getAttribute('data-wait');
+  let dataBusy = formSubmitButton.getAttribute('data-busy');
+
+  function disableSubmitButton(buttonLabel) {
+    formSubmitButton.setAttribute('disabled', 'disabled');
+    formSubmitButton.value = buttonLabel;
   }
+
+  function enableSubmitButton() {
+    formSubmitButton.removeAttribute('disabled');
+    formSubmitButton.value = initialButtonValue;
+  }
+
+  disableSubmitButton('Loading...');
   // ------------------------------------------------------------------------------------------
   window.$loaded(function () {
     window.$parsleyLoaded = function (cb) {
@@ -28,14 +38,10 @@
         $parsleyLoaded(cb);
       }, 50);
     };
+
     window.$parsleyLoaded(function (window, document, parsley) {
       const form = $(prospectFormId);
       const formContainer = $(formContainerClass);
-      const formSubmitButton = form.find(formSubmitButtonSelector);
-      // Store button labels for state changes
-      let initialButtonValue = formSubmitButton.attr('data-initial');
-      let dataWait = formSubmitButton.attr('data-wait');
-      let dataBusy = formSubmitButton.attr('data-busy');
 
       function trackSubmission() {
         var emailValue = form.find('#email').val();
@@ -56,9 +62,11 @@
           });
         }
       }
-      function startProspectPolling(prospectId) {
+
+      function startProspectPolling(prospectId, buttonLabelTimer) {
         const errorText = formContainer.find('.js-form-error');
-        const poll = function () {
+
+        function poll() {
           $.ajax({
             type: 'GET',
             url: `/api/company/prospects/${prospectId}`,
@@ -67,15 +75,17 @@
               Accept: 'application/json',
             },
             statusCode: {
+              304: function () {
+                setTimeout(poll, 1000);
+              },
               200: function (data) {
-                clearInterval(pollInterval);
+                clearTimeout(buttonLabelTimer);
                 trackSubmission();
                 window.location.pathname = '/hire-developers/get-started';
               },
               401: function (data) {
                 const responseData = data.responseJSON;
-                formSubmitButton.attr('disabled', false);
-                formSubmitButton.text(initialButtonValue);
+                enableSubmitButton();
                 if (responseData.error == 'invalid_address') {
                   errorText.text(
                     "Oops! We couldn't validate your email. Please check that you are using your work email, then try again."
@@ -87,29 +97,25 @@
                   );
                   errorText.show();
                 }
-                clearInterval(pollInterval);
+                clearTimeout(buttonLabelTimer);
               },
               404: function () {
-                formSubmitButton.attr('disabled', false);
-                formSubmitButton.text(initialButtonValue);
+                enableSubmitButton();
                 errorText.text(
                   'Oops! Something went wrong while submitting the form.'
                 );
                 errorText.show();
-                clearInterval(pollInterval);
+                clearTimeout(buttonLabelTimer);
               },
             },
           });
-        };
-        pollInterval = setInterval(function () {
-          poll();
-        }, 1000);
-        poll();
+        }
+
+        setTimeout(poll, 1000);
       }
 
       function onSubmitForm(token, e) {
-        formSubmitButton.attr('disabled', true);
-        formSubmitButton.text(dataWait);
+        disableSubmitButton(dataWait);
         window.pageVariantMeasureEnd = btoa(new Date().getTime() / 1000);
 
         // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
@@ -121,8 +127,9 @@
         if (form.parsley().validate()) {
           // Setting submit button label
           let buttonLabelTimer = setTimeout(function () {
-            formSubmitButton.text(dataBusy);
+            disableSubmitButton(dataBusy);
           }, 5000);
+
           // Hide errors
           form.find('.js-missing-fields').hide();
           const prospectProperties = Object.assign({}, formProperties, {
@@ -143,13 +150,12 @@
             },
             success: function (data) {
               if (data.id) {
-                startProspectPolling(data.id);
+                startProspectPolling(data.id, buttonLabelTimer);
               }
             },
             // Reset form
             error: function (data) {
-              formSubmitButton.attr('disabled', false);
-              formSubmitButton.text(initialButtonValue);
+              enableSubmitButton();
               clearTimeout(buttonLabelTimer);
 
               if (data.recaptcha_verify) {
@@ -161,10 +167,10 @@
           });
         } else {
           form.find('.js-missing-fields').show();
-          formSubmitButton.attr('disabled', false);
-          formSubmitButton.text(initialButtonValue);
+          enableSubmitButton();
         }
       }
+
       function updateSubscribeToHiringInsightsField() {
         subscribeToCompanyNewsletter = form.find(
           '#subscribe_to_company_newsletter'
@@ -173,6 +179,7 @@
           form.find('#subscribe_to_hiring_insights').val(this.value);
         });
       }
+
       function matchCheckboxStates() {
         form.find('.w-checkbox').each(function () {
           const el = $(this);
@@ -184,6 +191,7 @@
           }
         });
       }
+
       // ------------------------------------------------------------
       // Setup form
       // ------------------------------------------------------------
@@ -194,8 +202,10 @@
           form.find('.recaptcha-error').show();
         }
         function onFormReady() {
-          formSubmitButton.one('click', function (e) {
+          form.on('submit', function (e) {
             e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
             grecaptcha.ready(function () {
               grecaptcha
                 .execute('6Lf802weAAAAAHgxndx9NIZ3FTzdG3f7nBua2rRY', {
