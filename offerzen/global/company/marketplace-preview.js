@@ -40,8 +40,17 @@ $loaded(function () {
 
   function onSubmit(event) {
     event.preventDefault();
-    const params = new URLSearchParams(filters).toString();
-    window.location = $(this).attr('href') + '?' + params;
+    const marketplaceUrl = new URL('https://offerzen.com' + $(this).attr('href'));
+    if (filters.locations.length > 0) {
+      marketplaceUrl.searchParams.append('locations', filters.locations);
+    }
+    if (filters.roles.length > 0) {
+      marketplaceUrl.searchParams.append('roles', filters.roles);
+    }
+    if (filters.skills.length > 0) {
+      marketplaceUrl.searchParams.append('skills', filters.skills);
+    }
+    window.location = marketplaceUrl.href;
   }
 
   onFilterToggle(locationItems, filters.locations);
