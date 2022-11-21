@@ -69,7 +69,7 @@
         function poll() {
           $.ajax({
             type: 'GET',
-            url: `https://7043-41-71-1-148.ngrok.io/api/company/prospects/${prospectId}`, // TODO: REVERT THIS BEFORE SHIPPING
+            url: `/api/company/prospects/${prospectId}`,
             contentType: 'application/json',
             headers: {
               Accept: 'application/json',
@@ -142,7 +142,7 @@
           });
           $.ajax({
             type: 'POST',
-            url: 'https://7043-41-71-1-148.ngrok.io/api/company/prospects', // TODO: REVERT THIS BEFORE SHIPPING
+            url: '/api/company/prospects',
             data: JSON.stringify({ company_prospect: prospectProperties }),
             contentType: 'application/json',
             headers: {
