@@ -1,0 +1,9 @@
+.js-filter-selected, 
+.js-filter-selected:active, 
+.js-filter-selected:focus, 
+.js-filter-selected:visited {
+  background-color: #2F96F4 !important;
+  border-color: #2F96F4 !important;
+  color: #ffffff !important;
+}
+
