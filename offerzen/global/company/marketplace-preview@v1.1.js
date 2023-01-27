@@ -54,7 +54,7 @@ $loaded(function () {
   }
 
   onFilterToggle(locationItems, filters.locations);
-  onFilterToggle(roleItems, filters.roles, 1, '.js-filter-role-error');
+  onFilterToggle(roleItems, filters.roles, 1, '.js-filter-roles-error');
   onFilterToggle(skillItems, filters.skills, 3, '.js-filter-skill-error');
 
   $('#submit-filters').on('click', onSubmit);
