@@ -5,7 +5,7 @@
       rx.trigger('apply');
       return
     }
-    if (counter++ < 30) { // 2.5 minutes
+    if (counter++ < 50) { // 4 minutes
       setTimeout(cb, 5000)
     }
   }
