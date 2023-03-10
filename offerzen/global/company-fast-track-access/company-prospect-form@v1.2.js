@@ -12,7 +12,7 @@
   );
 
   // Store button labels for state changes
-  let initialButtonValue = formSubmitButton.value;
+  let initialButtonValue = formSubmitButton.value();
   let dataWait = formSubmitButton.getAttribute('data-wait');
   let dataBusy = formSubmitButton.getAttribute('data-busy');
 
