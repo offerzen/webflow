@@ -89,7 +89,7 @@
                 if (option === 'call_booked') {
                   window.location.href = `https://meetings.hubspot.com/nickreid/sdr-eu-booking`;
                 } else {
-                  window.location.href = `/hire-developers/get-started?prospect_id=${prospectId}`;
+                  window.location.href = `/hire/get-started/account?prospect_id=${prospectId}`;
                 }
               },
               401: function (data) {
