@@ -1,1 +1,1 @@
-!(function(){console.log('x')})()
+!(function(){console.log('y')})()
