@@ -108,10 +108,16 @@
         return false;
       }
 
+      // Add domain if URL starts with forward slash
       if (linkHref.match(/^\//)) {
-        linkHref = `https://www.offerzen.com/${linkHref}`;
+        linkHref = `https://www.offerzen.com${linkHref}`;
       }
-
+      
+      // Remove trailing forward slash in URL
+      if (linkHref.match(/\/$/)) {
+        linkHref = linkHref.replace(/\/$/, '');
+      }
+      
       // Removes search params or UTMs
       const pageHref = `${window.location.origin}${window.location.pathname}`;
 

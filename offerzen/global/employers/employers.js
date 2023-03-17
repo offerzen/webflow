@@ -1,7 +1,7 @@
 (function () {
   // FORM TARGETTING
-  const leadFormId = '#Multi-Step-Company-Lead-Form';
-  const pageRef = 'onSubmitMultiStepCompanyLeadForm';
+  const leadFormId = '#Original-Company-Lead-Form';
+  const pageRef = 'onSubmitOriginalCompanyLeadForm';
   const formSubmitButtonSelector = 'input[type=submit]';
   // END FORM TARGETING
 
@@ -10,7 +10,6 @@
   const button = document.querySelector(
     `${leadFormId} ${formSubmitButtonSelector}`
   );
-
   button.setAttribute('disabled', 'disabled');
   const label = button.value;
   button.value = 'Loading...';
@@ -89,19 +88,24 @@
       }
 
       function trackSubmission() {
-        var event = form.find('.js-analytics-event').text();
-        var action = form.find('.js-analytics-action').text();
-        var label = form.find('.js-analytics-label').text();
-        var category = form.find('.js-analytics-category').text();
-        var source = form.find('.js-analytics-source').text();
+        var emailValue = form.find('#contact_email').val();
+        var isPlaywrightTest = emailValue.match(/^\s*playwrighttest@offerzen\.com\s*$/i) != null;
 
-        dataLayer.push({
-          event: event || 'Company Lead Form Submitted',
-          action: action || 'Lead Form Submitted',
-          label: label || 'Company Sign Up / Employer Landing Page',
-          category: category || 'Core',
-          source: source || 'Demand Sign Up',
-        });
+        if (!isPlaywrightTest) {
+          var event = form.find('.js-analytics-event').text();
+          var action = form.find('.js-analytics-action').text();
+          var label = form.find('.js-analytics-label').text();
+          var category = form.find('.js-analytics-category').text();
+          var source = form.find('.js-analytics-source').text();
+
+          dataLayer.push({
+            event: event || 'Company Lead Form Submitted',
+            action: action || 'Lead Form Submitted',
+            label: label || 'Company Sign Up / Employer Landing Page',
+            category: category || 'Core',
+            source: source || 'Demand Sign Up',
+          });
+        }
       }
 
       function onSubmitForm(token, e) {
@@ -116,9 +120,11 @@
         const formProperties = Object.fromEntries(formData.entries());
         const roleTypes = getRoleTypes(formProperties);
 
+        form.find('.recaptcha-error').hide();
+        form.find('.js-submit-error').hide();
+
         if (form.parsley().validate()) {
           form.find('.js-missing-fields').hide();
-          trackSubmission();
           $.ajax({
             type: 'POST',
             url: '/company/form_leads',
@@ -139,6 +145,7 @@
             },
             success: function (data) {
               if (data.user_id) {
+                trackSubmission();
                 localStorage.clear();
                 window.location.href = data.redirect_url;
               }
@@ -147,6 +154,12 @@
             error: function (data) {
               formSubmitButton.attr('disabled', false);
               formSubmitButton.attr('value', initialButtonValue);
+
+              if (data.recaptcha_verify) {
+                form.find('.recaptcha-error').show();
+              } else {
+                form.find('.js-submit-error').show();
+              }
             },
           });
         } else {
