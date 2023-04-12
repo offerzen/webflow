@@ -107,7 +107,7 @@
               404: function () {
                 enableSubmitButton();
                 errorText.text(
-                  'Oops! There has been an error.'
+                  'Oops! Something went wrong while submitting the form.'
                 );
                 errorText.show();
                 clearTimeout(buttonLabelTimer);
