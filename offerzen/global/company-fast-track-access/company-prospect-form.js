@@ -43,6 +43,7 @@
       const form = $(prospectFormId);
       const formContainer = $(formContainerClass);
       const option = form.find('.js-access-option').text();
+      const errorText = formContainer.find('.js-form-error');
       
       function trackSubmission() {
         var emailValue = form.find('#email').val();
@@ -65,8 +66,7 @@
       }
 
       function startProspectPolling(prospectId, buttonLabelTimer) {
-        const errorText = formContainer.find('.js-form-error');
-
+    
         function poll() {
           $.ajax({
             type: 'GET',
@@ -108,6 +108,15 @@
                 enableSubmitButton();
                 errorText.text(
                   'Oops! Something went wrong while submitting the form.'
+                );
+                errorText.show();
+                clearTimeout(buttonLabelTimer);
+              },
+              // 422 is returned if user company exists on OfferZen
+              422: function () {
+                enableSubmitButton();
+                errorText.text(
+                  'Oops! There has been an error. Please check your email for further instructions.'
                 );
                 errorText.show();
                 clearTimeout(buttonLabelTimer);
@@ -169,7 +178,7 @@
               if (data.recaptcha_verify) {
                 form.find('.recaptcha-error').show();
               } else {
-                formContainer.find('.js-form-error').show();
+                errorText.show();
               }
             },
           });
