@@ -32,7 +32,7 @@
       var email = document.querySelector("input[name='email'],[data-input-name='email']").value;
 
       // Extra fields which could be required per Webflow form
-      var fields = ['company_name', 'job_title'];
+      var fields = ['company_name', 'job_title', 'actively_hiring'];
       var email_subscriptions = ['subscribe_to_company_newsletter', 'subscribe_to_blog', 'subscribe_to_hiring_insights', 'subscribe_to_events', 'subscribe_to_job_opportunities'];
 
       var payload = {
