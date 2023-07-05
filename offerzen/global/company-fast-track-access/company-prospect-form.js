@@ -83,7 +83,7 @@
                 clearTimeout(buttonLabelTimer);
                 trackSubmission();
                 if (option === 'call_booked') {
-                  window.location.href = `https://meetings.hubspot.com/nickreid/sdr-eu-booking`;
+                  window.location.href = `https://meetings.hubspot.com/nickreid/chat-with-sales`;
                 } else {
                   window.location.href = `/hire/get-access?prospect_id=${prospectId}`;
                 }
