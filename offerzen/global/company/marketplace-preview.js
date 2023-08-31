@@ -34,7 +34,7 @@ $loaded(function () {
         }
 
         if (elementContent === 'Europe') {
-          item.push('Netherlands', 'Germany', 'Ireland', 'Spain')
+          items.push('Netherlands', 'Germany', 'Ireland', 'Spain')
         } else {
           items.push(elementContent);
         }
