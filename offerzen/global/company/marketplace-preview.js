@@ -32,7 +32,12 @@ $loaded(function () {
           $(limitErrorSelector).show();
           return;
         }
-        items.push(elementContent);
+
+        if (elementContent === 'Europe') {
+          item.push('Netherlands', 'Germany', 'Ireland', 'Spain')
+        } else {
+          items.push(elementContent);
+        }
         $(this).addClass('js-filter-selected');
       }
     });
