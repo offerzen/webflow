@@ -44,7 +44,7 @@
       const formContainer = $(formContainerClass);
       const option = form.find('.js-access-option').text();
       const errorText = formContainer.find('.js-form-error');
-      
+
       function trackSubmission() {
         var emailValue = form.find('#email').val();
         var isPlaywrightTest =
@@ -66,7 +66,6 @@
       }
 
       function startProspectPolling(prospectId, buttonLabelTimer) {
-    
         function poll() {
           $.ajax({
             type: 'GET',
@@ -116,7 +115,7 @@
               422: function () {
                 enableSubmitButton();
                 errorText.text(
-                  'Oops! There has been an error. Please check your email for further instructions.'
+                  'Check your email. Looks like there’s been an error.'
                 );
                 errorText.show();
                 clearTimeout(buttonLabelTimer);
