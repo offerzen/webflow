@@ -150,6 +150,7 @@
             report_source: searchParams.get('report_source'),
             page_variant_meta: `${window.pageVariantMeasureStart}-optimize-meta-${pageVariantMeasureEnd}`,
             access_option: `${option}`,
+            selected_pricing_option: searchParams.get('pricing_option')
           });
           $.ajax({
             type: 'POST',
