@@ -131,7 +131,7 @@
         disableSubmitButton(dataWait);
         window.pageVariantMeasureEnd = btoa(new Date().getTime() / 1000);
 
-        // get the value of the report_source query parameter should it be present and forward it onto form lead submission for analytics
+        // get the value of the report_source and pricing_option query parameter should it be present and forward it onto form lead submission for analytics
         let searchParams = new URLSearchParams(window.location.search);
         const formData = new FormData(form[0]);
         const formProperties = Object.fromEntries(formData.entries());
