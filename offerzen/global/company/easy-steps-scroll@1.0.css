@@ -1,0 +1,166 @@
+.easy-steps {
+  margin: auto;
+  max-width: 1200px;
+  padding: 0 20px;
+  display: none;
+  padding-top: 100px;
+}
+
+.easy-steps.visible {
+  display: block !important;
+}
+
+.easy-steps-content {
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+  margin-top: -220px;
+  margin-bottom: -20vh;
+}
+
+.easy-steps-content>* {
+  flex: 1 0;
+}
+
+.easy-steps-header {
+  position: sticky;
+  top: 60px;
+  backdrop-filter: blur(4px);
+  background: #ffffffb0;
+  margin: 0;
+  text-align: center;
+  z-index: 1;
+  margin-bottom: 220px;
+}
+
+.easy-steps-header h2 {
+  margin: 0 auto;
+  max-width: 650px;
+  line-height: 120%;
+  font-weight: 700;
+  font-size: 28px;
+  color: #0e204b;
+  padding: 20px;
+}
+
+@media (min-width: 700px) and (min-height: 600px) {
+  .easy-steps-header h2 {
+    font-size: 40px;
+  }
+}
+
+.easy-steps-header h2 strong {
+  color: #2f96f4;
+}
+
+.easy-steps-list-image {
+  position: sticky;
+  top: 0;
+  background: #d8deff;
+  max-height: 100vh;
+  display: none;
+}
+
+@media (min-width: 700px) and (min-height: 600px) {
+  .easy-steps-list-image {
+    display: block;
+  }
+}
+
+.easy-steps-list-image .easy-steps-list-item {
+  position: absolute;
+  padding: 30px;
+}
+
+.easy-steps-list-image .easy-steps-list-item__image {
+  background: rgba(0, 0, 0, 0.3);
+  max-width: 100%;
+  box-shadow: -1px -1px 0 3px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  transform-origin: center top;
+  overflow: hidden;
+  transition: transform 0.2s ease-out;
+}
+
+@media (min-width: 700px) and (min-height: 600px) {
+  .easy-steps-list-text {
+    padding-top: 30vh;
+    padding-bottom: 30vh;
+  }
+}
+
+.easy-steps-list-text .easy-steps-list-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-bottom: 10vh;
+  align-items: center;
+}
+
+@media (min-width: 700px) and (min-height: 600px) {
+  .easy-steps-list-text .easy-steps-list-item {
+    height: 80vh;
+  }
+
+  .easy-steps-list-text .easy-steps-list-item:last-child {
+    height: 40vh;
+  }
+}
+
+.easy-steps-list-text .easy-steps-list-item__container {
+  max-width: 600px;
+}
+
+.easy-steps-list-text .easy-steps-list-item__mobile {
+  max-width: 100%;
+}
+
+@media (min-width: 700px) and (min-height: 600px) {
+  .easy-steps-list-text .easy-steps-list-item__mobile {
+    display: none;
+  }
+}
+
+.easy-steps-list-text .easy-steps-list-item__mobile-image {
+  max-width: 100%;
+}
+
+.easy-steps-list-text .easy-steps-list-item__number {
+  margin-right: 12px;
+}
+
+.easy-steps-list-text .easy-steps-list-item__title {
+  display: flex;
+  align-items: center;
+}
+
+.easy-steps-list-text .easy-steps-list-item__number {
+  border-radius: 50px;
+  color: #fff;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: #1e8dee;
+  min-width: 29px;
+  min-height: 29px;
+  border: 3px solid #000;
+  box-shadow: inset 1px 1px 3px 0 rgba(255, 255, 255, 0.7);
+}
+
+@media (min-width: 700px) and (min-height: 600px) {
+  .easy-steps-list-text .easy-steps-list-item:first-child {
+    padding-top: 20vh;
+  }
+}
+
+.easy-steps-cta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  height: 220px;
+}
