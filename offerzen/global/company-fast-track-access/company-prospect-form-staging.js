@@ -84,7 +84,7 @@
                 if (option === 'call_booked') {
                   window.location.href = `https://meetings.hubspot.com/nickreid/chat-with-sales`;
                 } else {
-                  window.location.href = `/hire/get-access?prospect_id=${prospectId}`;
+                  window.location.href = `https://fast-track-access-staging-2e161b27cbe5.herokuapp.com?prospect_id=${prospectId}`;
                 }
               },
               401: function (data) {
