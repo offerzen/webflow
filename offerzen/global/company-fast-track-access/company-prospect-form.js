@@ -61,6 +61,7 @@
             label: label || 'Company Sign Up / Employer Landing Page',
             category: category || 'Core',
             source: source || 'Demand Sign Up',
+            email: emailValue
           });
         }
       }
