@@ -7,6 +7,7 @@
         const $cookieBanner = $('.js-cookie-banner')
         const $acceptButton = $('.js-cookie-button')
         // if there is no auth cookie and no banner cookie call the endpoint
+
         isEuUser()
           .then(function (resp) {
             // if the endpoint says we should show the banner show the banner
@@ -25,7 +26,8 @@
             }
           })
           .catch(function (err) { throw new Error(err) })
-      }
+        }
+
       // Functions
       // --------------------------------------------------
 
@@ -71,5 +73,10 @@
     }
   )
 
-  setTimeout(loadCookieBanner, 3000);
+  /* TODO: @team:growth @kay @due:2024-06-01
+  * @details: We need urgently move from self-managed cookies to granular cookie control.
+  * https://offerzen.slack.com/archives/CMNMA8PLJ/p1708089108934689
+  * @action: Clean up the code and remove the commented out code once the new cookie banner is live
+  */
+  // setTimeout(loadCookieBanner, 3000);
 }();
