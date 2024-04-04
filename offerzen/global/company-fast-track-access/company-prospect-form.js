@@ -112,6 +112,15 @@
                 errorText.show();
                 clearTimeout(buttonLabelTimer);
               },
+              // 400 is returned if user company exists on OfferZen and is new user
+              400: function () {
+                enableSubmitButton();
+                errorText.text(
+                  'Oops! It seems we can\'t give you access right now. We\'ve sent you an email with the next steps to help you get set up.'
+                );
+                errorText.show();
+                clearTimeout(buttonLabelTimer);
+              },
               // 422 is returned if user company exists on OfferZen
               422: function () {
                 enableSubmitButton();
