@@ -116,7 +116,7 @@
               400: function () {
                 enableSubmitButton();
                 errorText.text(
-                  'Please check your email for instructions on how to get access to OfferZen to start hiring.'
+                  'Oops! It seems we can\'t give you access right now. We\'ve sent you an email with the next steps to help you get set up.'
                 );
                 errorText.show();
                 clearTimeout(buttonLabelTimer);
