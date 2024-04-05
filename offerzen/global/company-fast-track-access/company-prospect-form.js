@@ -116,12 +116,11 @@
               400: function () {
                 enableSubmitButton();
                 errorText.text(
-                  'Oops! It seems we can\'t give you access right now. We\'ve sent you an email with the next steps to help you get set up.'
+                  "It seems like your company already exists on OfferZen. We've sent you an email with next steps to help you get set up."
                 );
                 errorText.show();
                 clearTimeout(buttonLabelTimer);
               },
-              // 422 is returned if user company exists on OfferZen
               422: function () {
                 enableSubmitButton();
                 errorText.text(
