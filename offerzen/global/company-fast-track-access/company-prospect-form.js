@@ -124,7 +124,7 @@
               422: function () {
                 enableSubmitButton();
                 errorText.text(
-                  'Check your email. Looks like there’s been an error.'
+                  'Check your email for further instructions.'
                 );
                 errorText.show();
                 clearTimeout(buttonLabelTimer);
